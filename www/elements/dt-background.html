@@ -1,0 +1,56 @@
+<template shadowrootmode="open">
+  <style>
+    :host {
+      isolation: isolate;
+      position: absolute;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -100;
+    }
+
+    div:first-of-type {
+      background: hsl(0, 100%, 50%);
+      position: absolute;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      mix-blend-mode: darken;
+      animation: 10s infinite rotate-background;
+    }
+
+    @keyframes rotate-background {
+      0% {
+        background: hsl(0, 100%, 50%);
+      }
+      50% {
+        background: hsl(180, 100%, 50%);
+      }
+      100% {
+        background: hsl(360, 100%, 50%);
+      }
+    }
+
+    div:last-child {
+      height: 100%;
+      background: linear-gradient(to top, #49297e, transparent),
+        url(/assets/noise.svg);
+      filter: contrast(290%) brightness(1000%);
+      animation: 15s infinite rotate-contrast;
+    }
+
+    @keyframes rotate-contrast {
+      0% {
+        filter: contrast(175%) brightness(1000%);
+      }
+      50% {
+        filter: contrast(300%) brightness(1000%);
+      }
+      100% {
+        filter: contrast(175%) brightness(1000%);
+      }
+    }
+  </style>
+    <div></div>
+    <div></div>
+</template>
