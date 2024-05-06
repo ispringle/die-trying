@@ -115,12 +115,12 @@
             fragments)
     updated-fragments))
 
-(defun process-fragments ()
+(defun process-fragments (fragments)
   (add-dependencies 
-   (list-dependencies *fragments*)))
+   (list-dependencies fragments)))
 
 (defun main ()
   (process-files)
   (process-templates *templates*
-                     (process-fragments)))
+                     (process-fragments *fragments*)))
 (main)
