@@ -28,15 +28,19 @@
   (coerce vec 'list))
 
 (defun vector-empty-p (vec)
-  (when (vector-to-list vec) t))
+  (unless (vector-to-list vec) t))
 
 (defun vector-op (func vec)
   (funcall func (vector-to-list vec)))
 
+(defun dom-to-string (dom)
+  (vector-op 'car (lquery:$ dom (serialize))))
+
 ;;; Do the things
 (defun expand (node)
   (lambda (fragment)
-    (destructuring-bind (&key tag el) fragment
+    (let ((tag (getf fragment ':tag))
+          (el (getf fragment ':el)))
       (lquery:$ node tag (append el)))
     node))
 
@@ -44,13 +48,14 @@
   (let ((expand-node (expand node)))
     (mapcar expand-node fragments)))
 
-(defun process-dom (path)
+(defun process-doms (path)
   (let ((dom (lquery:$ (initialize path))))
-    (if (vector-empty-p (lquery:$ dom "html"))
+    (if (not (vector-empty-p (lquery:$ dom "html")))
         (setf *templates* (cons path *templates*))
         (setf *fragments*
               (cons (list :tag (pathname-name path)
-                          :el (vector-op 'car (lquery:$ dom(serialize))))
+                          :el dom
+                          :path path)
                     *fragments*)))))
 
 (defun copy-file (path &optional (out (get-out-path path)))
@@ -59,7 +64,7 @@
 
 (defun process-file (file)
   (if (equal (pathname-type file) "html")
-      (process-dom file)
+      (process-doms file)
       (copy-file file)))
 
 (defun process-files ()
@@ -73,15 +78,49 @@
     (ensure-directories-exist out)
     out))
 
-(defun process-templates ()
+(defun process-templates (templates fragments)
   (mapcar (lambda (file)
             (let ((dom (lquery:$ (initialize file)))
                   (out (get-out-path file)))
-              ;; Process fragment tags
-              (lquery:$ dom (expand-all *fragments*) (write-to-file out))))
-          *templates*))
+              (lquery:$ dom (expand-all fragments) (write-to-file out))))
+          templates))
+
+(defun add-dependencies (fragments)
+  (let ((updated-fragments nil))
+    (mapcar (lambda (frag)
+              (setf updated-fragments
+                    (cons (list :tag (getf frag ':tag)
+                                :el (expand-all
+                                     (getf frag ':el)
+                                     fragments))
+                          updated-fragments)))
+            fragments)
+    updated-fragments))
+
+(defun list-dependencies (fragments)
+  (let ((updated-fragments nil))
+    (mapcar (lambda (dom-plist)
+              (let ((dependencies nil)
+                    (dom (getf dom-plist ':el)))
+                (mapcar (lambda (frag)
+                          (let ((tag (getf frag ':tag)))
+                            (when (not (vector-empty-p (lquery:$ dom tag)))
+                              (setf dependencies (cons tag dependencies)))))
+                        fragments)
+                (setf updated-fragments
+                      (cons (list :tag (getf dom-plist ':tag)
+                                  :deps dependencies
+                                  :el dom)
+                            updated-fragments))))
+            fragments)
+    updated-fragments))
+
+(defun process-fragments ()
+  (add-dependencies 
+   (list-dependencies *fragments*)))
 
 (defun main ()
   (process-files)
-  (process-templates))
+  (process-templates *templates*
+                     (process-fragments)))
 (main)
