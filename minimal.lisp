@@ -1,3 +1,7 @@
+(ql:quickload "lquery")
+(ql:quickload "cl-fad")
+(ql:quickload "str")
+
 ;;; Utils
 (defun mapc-walk-directory (fn dir)
   "Walk a directory, `dir'` and run `fn' on all subdirectories and files."
@@ -14,7 +18,12 @@
   (unless (cl-fad:directory-exists-p out)
     (cl-fad:copy-file path (get-out-path path) :overwrite t)))
 
-;;;
+(defun get-out-path (file)
+  (let* ((file-part (cadr (str:split *in* (namestring file))))
+         (out (str:concat *out* file-part)))
+    (ensure-directories-existy out)
+    out))
+
 (defun categorize-file (path)
   (if (not (equal (pathname-type path) "html"))
       'asset
@@ -33,24 +42,6 @@
               (list :dom dom :tag tag)))
           paths))
 
-(defun find-dependencies (fragments)
-  (let (updated-fragments)
-    (mapcar (lambda (dom-plist)
-              (let ((dependencies nil)
-                    (dom (getf dom-plist ':dom)))
-                (mapcar (lambda (fragment)
-                          (let ((tag (getf fragment ':tag)))
-                            (when (not (vector-empty-p (lquery:$ dom tag)))
-                              (setf dependencies (cons tag dependencies)))))
-                        fragments)
-                (setf updated-fragments
-                      (cons (list :tag (getf dom-plist ':tag)
-                                  :dom dom
-                                  :deps dependencies)
-                            updated-fragments))))
-            fragments)
-    updated-fragments))
-
 (defun expand (node fragments)
   (mapcar (lambda (fragment)
             (let ((tag (getf fragment ':tag))
@@ -60,38 +51,28 @@
   node)
 
 ;;; Processors
-(defun process-input-files (dir)
+(defun process-input-files ()
   (let (templates fragments)
     (mapc-walk-directory (lambda (path)
                            (let ((category (categorize-file path)))
                              (cond ((equal category 'template) (setf templates (cons path templates)))
                                    ((equal category 'fragment) (setf fragments (cons path fragments)))
                                    (t (copy-file path)))))
-                         dir)
+                         *in*)
     (list templates fragments)))
 
-(defun process-templates (templates fragments)
-  templates)
+(defun process (template-paths fragment-paths)
+  (let ((fragments (build-fragment-objects fragment-paths)))
+    (mapcar (lambda (path)
+              (let ((dom (path-to-dom path))
+                    (out (get-out-path path)))
+                (lquery:$ dom (expand fragments) (write-to-file out))))
+            template-paths)))
 
-(defun process-fragments (fragment-paths)
-  (let* ((fragments (build-fragment-objects fragment-paths))
-         (expanded-fragments nil))
-    (mapcar (lambda (fragment)
-              (setf expanded-fragments
-                    (cons (list :tag (getf fragment ':tag)
-                                :dom (expand (getf fragment ':dom) fragments))
-                          expanded-fragments)))
-            fragments)
-    expanded-fragments))
+(defun main ()
+  (let ((x (process-input-files)))
+    (process (car x) (cadr x))))
 
-(defun write-templates (templates base-dir)
-  templates)
-
-(defun main (in out)
-  (let* ((x (process-input-files in))
-         (fragments (process-fragments (cadr x)))
-         (templates (process-templates (car x) fragments)))
-    (write-templates templates out)
-    ))
-
-(main "www/" "out/")
+(defparameter *in* "www/")
+(defparameter *out* "out/")
+(main)
