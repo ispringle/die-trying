@@ -32,12 +32,13 @@
     out))
 
 (defun categorize-file (path)
-  (if (not (equal (pathname-type path) "html"))
-      'asset
-      (let ((dom (lquery:$ (initialize path))))
-        (if (vector-empty-p (lquery:$ dom "html"))
-            'fragment
-            'template))))
+  (cond
+    ((str:starts-with-p "#." (pathname-name path)) nil)
+    ((not (equal (pathname-type path) "html")) 'asset)
+    (t (let ((dom (lquery:$ (initialize path))))
+         (if (vector-empty-p (lquery:$ dom "html"))
+             'fragment
+             'template)))))
 
 (defun path-to-dom (path)
   (lquery:$ (initialize path) (children)))
@@ -82,7 +83,8 @@
                            (let ((category (categorize-file path)))
                              (cond ((equal category 'template) (setf templates (cons path templates)))
                                    ((equal category 'fragment) (setf fragments (cons path fragments)))
-                                   (t (copy-file path)))))
+                                   ((equal category 'asset) (copy-file path))
+                                   (t) (nil))))
                          dir)
     (list templates fragments)))
 
