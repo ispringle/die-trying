@@ -2,35 +2,11 @@
 <html lang="en">
   <head></head>
   <body>
-    <style>
-      dt-skull {
-        animation: float 6s ease-in-out infinite;
-      }
-      @keyframes float {
-        0% {
-          transform: translatey(0);
-        }
-        50% {
-          transform: translatey(-2em);
-        }
-        100% {
-          transform: translatey(0);
-        }
-      }
-    </style>
+    <dt-header></dt-header>
     <main>
-      <dt-header></dt-header>
-      <dt-skull
-        style="
-          bottom: 6em;
-          right: 4em;
-          top: unset;
-          left: unset;
-          font-size: 1vmin;
-        "
-      ></dt-skull>
       <dt-article></dt-article>
-      <dt-background></dt-background>
     </main>
+    <dt-footer></dt-footer>
+    <dt-background></dt-background>
   </body>
 </html>

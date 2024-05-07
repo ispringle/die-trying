@@ -19,9 +19,13 @@ body {
     width: 100%;
     height: 100%;
     margin: 0;
-    font-family: '2dumb';
+    font-family: 'Oldenburg' serif;
 }
 
 body {
-    overflow: hidden;
+    overflow-x: auto;
+}
+
+h2, h3, h4, h5, h6 {
+    font-family: '2Dumb';
 }

@@ -1,6 +1,10 @@
 ;;;; die-trying.lisp
 (load "die-trying.asd")
 
+(defpackage #:die-trying
+  (:use #:cl)
+  (:export #:serve #:process))
+
 (in-package #:die-trying)
 
 ;;; Utils
@@ -14,6 +18,8 @@
 (defun vector-empty-p (vec)
   (unless (vector-to-list vec) t))
 
+(defun vector-to-list (vec)
+  (coerce vec 'list))
 
 (defun copy-file (path &optional (out (get-out-path path)))
   (unless (cl-fad:directory-exists-p out)
@@ -99,11 +105,35 @@
             fragments)
     expanded-fragments))
 
-(defun main (in out)
+(defun process (&optional (in "www/") (out "out/"))
+  (defparameter *input-dir* in)
+  (defparameter *output-dir* out)
   (let* ((x (process-input-files in))
          (fragments (process-fragments (cadr x))))
     (process-templates (car x) fragments)))
 
-(defparameter *input-dir* "www/")
-(defparameter *output-dir* "out/")
-(main *input-dir* *output-dir*)
+;; Dev server
+(defparameter *acceptor* nil)
+(defparameter *port* 4321)
+
+(defun file-watcher (path func)
+  "Starts a file-notify watcher in a thread to watch `path' and run `func' when a file changes."
+  (format t "Starting file watcher on ~a~%" path)
+  (org.shirakumo.file-notify:watch path)
+  (org.shirakumo.file-notify:with-events (file change :timeout t)
+    (when (not (str:starts-with-p ".#" (pathname-name file)))
+      (format t "~a changed~%" file)
+      (funcall func file change))))
+
+(defun serve ()
+  (setf *acceptor* (make-instance 'hunchentoot:easy-acceptor
+                                  :port *port*
+                                  :document-root *output-dir*))
+  (format t "Starting development server on ~a~%." *port*)
+  (hunchentoot:start *acceptor*)
+  (file-watcher "www/" (lambda (file change)
+                         (declare (ignore file change))
+                         (process))))
+
+(process)
+(serve)

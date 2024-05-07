@@ -1,6 +1,6 @@
 <template shadowrootmode="open">
   <style>
-    :host {
+    #frame {
       font-size: 3vmin;
       position: absolute;
       top: 45%;
@@ -16,17 +16,17 @@
       background-clip: padding-box;
     }
 
-    .skull {
+    #skull {
       position: relative;
       width: 16em;
-      height: 15em;
+      height: 10em;
       border: solid 0.5em black;
       border-radius: 5em 5em 3em 3em;
       background: white;
       z-index: 4;
     }
 
-    .teeth {
+    #teeth {
       position: absolute;
       bottom: -2.75em;
       left: 2.5em;
@@ -81,7 +81,7 @@
 
     .nose {
       position: absolute;
-      bottom: 1.5em;
+      bottom: 0.5em;
       left: 50%;
       margin-left: -1em;
       width: 2em;
@@ -94,13 +94,13 @@
       transform: rotate(45deg);
     }
 
-    .bones {
-      transform: rotate(-45deg) translate(-0.25em, -6em);
+    #bones {
+      transform: rotate(-45deg) translate(0.75em, -4em);
     }
 
     .bone {
       position: absolute;
-      width: 25em;
+      width: 20em;
       height: 3em;
       border-top: solid 0.5em black;
       border-bottom: solid 0.5em black;
@@ -146,25 +146,27 @@
       transform: rotate(-135deg);
     }
   </style>
-  <div class="skull">
-    <div class="eye"></div>
-    <div class="eye"></div>
-    <div class="nose"></div>
-  </div>
-  <div class="teeth">
-    <div class="tooth"></div>
-    <div class="tooth"></div>
-    <div class="tooth"></div>
-    <div class="tooth"></div>
-  </div>
-  <div class="bones">
-    <div class="bone">
-      <div class="bone-inner"></div>
-      <div class="bone-inner"></div>
+  <div id="frame">
+    <div id="skull">
+      <div class="eye"></div>
+      <div class="eye"></div>
+      <div class="nose"></div>
     </div>
-    <div class="bone">
-      <div class="bone-inner"></div>
-      <div class="bone-inner"></div>
+    <div id="teeth">
+      <div class="tooth"></div>
+      <div class="tooth"></div>
+      <div class="tooth"></div>
+      <div class="tooth"></div>
+    </div>
+    <div id="bones">
+      <div class="bone">
+        <div class="bone-inner"></div>
+        <div class="bone-inner"></div>
+      </div>
+      <div class="bone">
+        <div class="bone-inner"></div>
+        <div class="bone-inner"></div>
+      </div>
     </div>
   </div>
 </template>
