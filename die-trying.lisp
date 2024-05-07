@@ -125,15 +125,21 @@
       (format t "~a changed~%" file)
       (funcall func file change))))
 
+(defun watch ()
+  (file-watcher "www/" (lambda (file change)
+                         (declare (ignore file change))
+                         (process))))
+
 (defun serve ()
   (setf *acceptor* (make-instance 'hunchentoot:easy-acceptor
                                   :port *port*
                                   :document-root *output-dir*))
   (format t "Starting development server on ~a~%." *port*)
-  (hunchentoot:start *acceptor*)
-  (file-watcher "www/" (lambda (file change)
-                         (declare (ignore file change))
-                         (process))))
+  (hunchentoot:start *acceptor*))
 
-(process)
-(serve)
+(defun start-dev ()
+  (process)
+  (serve)
+  (watch))
+
+(start-dev)
