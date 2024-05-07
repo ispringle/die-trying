@@ -23,8 +23,9 @@ but tbh I've never tried.
 To just output some files you can use ~die-trying:proces~ by itself to generate
 your compiled HTML.
 
-** Todo's [/]
-- [ ] Figure out some redneck ~<slot>~ system.
+** Todo's [1/5]
+- [X] Figure out some redneck ~<slot>~ system. (Not even redneck, just native
+  slotting lol)
 - [ ] Add a ~<lisp>~ element for running arbitrary lisp code, defined in HTML
 - [ ] Add tags for markup, such as ~<org-mode>~ and ~<markdown>,~ for rendering the
   inner text to the specified markup.
