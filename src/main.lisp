@@ -37,12 +37,14 @@
              'fragment
              'template)))))
 
-(defun path-to-dom (path)
-  (lquery:$ (initialize path) (children)))
+(defun path-to-dom (path &optional (fragment nil))
+  (if fragment
+      (lquery:$ (initialize path) (children))
+      (lquery:$ (initialize path))))
 
 (defun build-fragment-objects (paths)
   (mapcar (lambda (path)
-            (let ((dom (path-to-dom path))
+            (let ((dom (path-to-dom path t))
                   (tag (pathname-name path)))
               (list :dom dom :tag tag)))
           paths))
@@ -140,6 +142,3 @@
   (process)
   (serve)
   (watch))
-
-;; (start-dev)
-
