@@ -1,9 +1,6 @@
-;;;; die-trying.lisp
-(load "die-trying.asd")
-
-(defpackage #:die-trying
-  (:use #:cl)
-  (:export #:serve #:process))
+(defpackage die-trying
+  (:use :cl)
+  (:export :start-dev :process))
 
 (in-package #:die-trying)
 
@@ -145,3 +142,4 @@
   (watch))
 
 (start-dev)
+

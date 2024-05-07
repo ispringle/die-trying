@@ -1,6 +1,9 @@
 # A plague upon the world
 */.DS_STORE
 
+
+/out
+
 # Lisp
 *.abcl
 *.fasl
