@@ -67,6 +67,9 @@
             fragments)
     updated-fragments))
 
+(defun node-children-to-str (node)
+  (car (vector-to-list (lquery:$ node (text)))))
+
 (defun expand (node fragments)
   (mapcar (lambda (fragment)
             (let ((tag (getf fragment ':tag))
@@ -142,3 +145,4 @@
   (process)
   (serve)
   (watch))
+
