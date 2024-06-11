@@ -70,13 +70,26 @@
 (defun node-children-to-str (node)
   (car (vector-to-list (lquery:$ node (text)))))
 
-(defun expand (node fragments)
+(defun expand (node fragments &optional (evaled ""))
+  (lquery:$ node "lisp" (each #'(lambda (node)
+                                  (lquery:$ node
+                                    (text)
+                                    #'(lambda (text)
+                                        (setf evaled
+                                              (eval-lisp-str-to-str
+                                               (car (vector-to-list text))))))))
+    (replace-with evaled))
+  
   (mapcar (lambda (fragment)
             (let ((tag (getf fragment ':tag))
                   (el (getf fragment ':dom)))
               (lquery:$ node tag (append el))))
           fragments)
   node)
+(process)
+
+(defmacro frag (&body body)
+  `(format nil "~a" (spinneret:with-html ,@body)))
 
 ;;; Processors
 (defun process-input-files (dir)
@@ -145,4 +158,9 @@
   (process)
   (serve)
   (watch))
+;; (watch)
 
+(defun eval-lisp-str-to-str (lisp)
+  (format nil "~a" (eval (read-from-string lisp))))
+
+(print (eval-lisp-str-to-str "(+ 2 3)"))

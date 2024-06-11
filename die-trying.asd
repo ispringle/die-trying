@@ -6,7 +6,8 @@
                :cl-fad
                :str
                :hunchentoot
-               :file-notify)
+               :file-notify
+               :spinneret)
   :components ((:module "src"
                 :components
                 ((:file "main"))))

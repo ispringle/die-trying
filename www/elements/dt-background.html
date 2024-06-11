@@ -11,8 +11,7 @@
 
     div:first-of-type {
       backdrop-filter: saturate(1);
-      background-image:
-          url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAGklEQVR42mP4DwUMQACm/yMBBhhAEURWDgIAWj4v0SL/2gUAAAAASUVORK5CYII=');
+      background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAGklEQVR42mP4DwUMQACm/yMBBhhAEURWDgIAWj4v0SL/2gUAAAAASUVORK5CYII=");
       width: 100vw;
       height: 100vh;
       position: fixed;
@@ -20,26 +19,22 @@
       top: 0;
       z-index: 1;
     }
-    
+
     div:nth-of-type(2) {
-      background: hsl(0, 100%, 50%);
+      background: hsl(180, 100%, 50%);
       position: absolute;
       top: 0;
       width: 100%;
       height: 100%;
       mix-blend-mode: darken;
-      animation: 10s infinite rotate-background;
+      animation: 1.1s infinite rotate-background;
+      animation-play-state: paused;
+      animation-delay: calc(var(--scroll) * -1s);
     }
 
     @keyframes rotate-background {
-      0% {
+      to {
         background: hsl(0, 100%, 50%);
-      }
-      50% {
-        background: hsl(180, 100%, 50%);
-      }
-      100% {
-        background: hsl(360, 100%, 50%);
       }
     }
 
@@ -63,6 +58,21 @@
       }
     }
   </style>
+  <script>
+    window.addEventListener(
+      "scroll",
+      () => {
+        var h = document.documentElement,
+          b = document.body,
+          st = "scrollTop",
+          sh = "scrollHeight";
+
+        var pos = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight);
+        document.body.style.setProperty("--scroll", pos);
+      },
+      false,
+    );
+  </script>
   <div></div>
   <div></div>
   <div></div>
