@@ -1,166 +1,25 @@
-(defpackage die-trying
-  (:use :cl)
-  (:export :start-dev :process))
-
 (in-package #:die-trying)
 
-;;; Utils
-(defun mapc-walk-directory (fn dir)
-  "Walk a directory, `dir'` and run `fn' on all subdirectories and files."
-  (dolist (entry (cl-fad:list-directory dir))
-    (when (cl-fad:directory-pathname-p entry)
-      (mapc-walk-directory fn entry))
-    (funcall fn entry)))
-
-(defun vector-empty-p (vec)
-  (unless (vector-to-list vec) t))
-
-(defun vector-to-list (vec)
-  (coerce vec 'list))
-
-(defun copy-file (path &optional (out (get-out-path path)))
-  (unless (cl-fad:directory-exists-p out)
-    (cl-fad:copy-file path (get-out-path path) :overwrite t)))
-
-(defun get-out-path (file)
-  (let* ((file-part (cadr (str:split *input-dir* (namestring file))))
-         (out (str:concat *output-dir* file-part)))
-    (ensure-directories-exist out)
-    out))
-
-(defun categorize-file (path)
-  (cond
-    ((str:starts-with-p "#." (pathname-name path)) nil)
-    ((not (equal (pathname-type path) "html")) 'asset)
-    (t (let ((dom (lquery:$ (initialize path))))
-         (if (vector-empty-p (lquery:$ dom "html"))
-             'fragment
-             'template)))))
-
-(defun path-to-dom (path &optional (fragment nil))
-  (if fragment
-      (lquery:$ (initialize path) (children))
-      (lquery:$ (initialize path))))
-
-(defun build-fragment-objects (paths)
-  (mapcar (lambda (path)
-            (let ((dom (path-to-dom path t))
-                  (tag (pathname-name path)))
-              (list :dom dom :tag tag)))
-          paths))
-
-(defun find-dependencies (fragments)
-  (let (updated-fragments)
-    (mapcar (lambda (dom-plist)
-              (let ((dependencies nil)
-                    (dom (getf dom-plist ':dom)))
-                (mapcar (lambda (fragment)
-                          (let ((tag (getf fragment ':tag)))
-                            (when (not (vector-empty-p (lquery:$ dom tag)))
-                              (setf dependencies (cons tag dependencies)))))
-                        fragments)
-                (setf updated-fragments
-                      (cons (list :tag (getf dom-plist ':tag)
-                                  :dom dom
-                                  :deps dependencies)
-                            updated-fragments))))
-            fragments)
-    updated-fragments))
-
-(defun node-children-to-str (node)
-  (car (vector-to-list (lquery:$ node (text)))))
-
-(defun expand (node fragments &optional (evaled ""))
-  (lquery:$ node "lisp" (each #'(lambda (node)
-                                  (lquery:$ node
-                                    (text)
-                                    #'(lambda (text)
-                                        (setf evaled
-                                              (eval-lisp-str-to-str
-                                               (car (vector-to-list text))))))))
-    (replace-with evaled))
-  
-  (mapcar (lambda (fragment)
-            (let ((tag (getf fragment ':tag))
-                  (el (getf fragment ':dom)))
-              (lquery:$ node tag (append el))))
-          fragments)
-  node)
-(process)
-
-(defmacro frag (&body body)
-  `(format nil "~a" (spinneret:with-html ,@body)))
-
-;;; Processors
-(defun process-input-files (dir)
-  (let (templates fragments)
-    (mapc-walk-directory (lambda (path)
-                           (let ((category (categorize-file path)))
-                             (cond ((equal category 'template) (setf templates (cons path templates)))
-                                   ((equal category 'fragment) (setf fragments (cons path fragments)))
-                                   ((equal category 'asset) (copy-file path))
-                                   (t) (nil))))
-                         dir)
-    (list templates fragments)))
-
-(defun process-templates (templates fragments)
-  (mapcar (lambda (path)
-            (let ((dom (path-to-dom path))
-                  (out (get-out-path path)))
-              (lquery:$ dom (expand fragments) (write-to-file out))))
-          templates))
-
-(defun process-fragments (fragment-paths)
-  (let* ((fragments (build-fragment-objects fragment-paths))
-         (fragments (find-dependencies fragments))
-         (expanded-fragments nil))
-    (mapcar (lambda (fragment)
-              (setf expanded-fragments
-                    (cons (list :tag (getf fragment ':tag)
-                                :dom (expand (getf fragment ':dom) fragments))
-                          expanded-fragments)))
-            fragments)
-    expanded-fragments))
+;;; Spinneret config 
+(defparameter spinneret:*html-style* :tree)
+(push "x-" spinneret:*unvalidated-attribute-prefixes*) ; alpinejs
+(push "@" spinneret:*unvalidated-attribute-prefixes*) ; alpinejs
+(push "hx-" spinneret:*unvalidated-attribute-prefixes*) ; htmx
 
 (defun process (&optional (in "www/") (out "out/"))
+  "The `process' function iterates over the files in `in' and ignores, copies, or renders them into `out'"
   (defparameter *input-dir* in)
   (defparameter *output-dir* out)
-  (let* ((x (process-input-files in))
-         (fragments (process-fragments (cadr x))))
-    (process-templates (car x) fragments)))
-
-;; Dev server
-(defparameter *acceptor* nil)
-(defparameter *port* 4321)
-
-(defun file-watcher (path func)
-  "Starts a file-notify watcher in a thread to watch `path' and run `func' when a file changes."
-  (format t "Starting file watcher on ~a~%" path)
-  (org.shirakumo.file-notify:watch path)
-  (org.shirakumo.file-notify:with-events (file change :timeout t)
-    (when (not (str:starts-with-p ".#" (pathname-name file)))
-      (format t "~a changed~%" file)
-      (funcall func file change))))
-
-(defun watch ()
-  (file-watcher "www/" (lambda (file change)
-                         (declare (ignore file change))
-                         (process))))
-
-(defun serve ()
-  (setf *acceptor* (make-instance 'hunchentoot:easy-acceptor
-                                  :port *port*
-                                  :document-root *output-dir*))
-  (format t "Starting development server on ~a~%." *port*)
-  (hunchentoot:start *acceptor*))
-
-(defun start-dev ()
-  (process)
-  (serve)
-  (watch))
-;; (watch)
-
-(defun eval-lisp-str-to-str (lisp)
-  (format nil "~a" (eval (read-from-string lisp))))
-
-(print (eval-lisp-str-to-str "(+ 2 3)"))
+  (mapc-walk-directory
+   (lambda (path)
+     (cond
+       ((str:starts-with-p ".#" (pathname-name path)) nil) ; Ignore emacs temp files
+       ((not (equal (pathname-type path) "lisp")) (copy-file path)) ; All non-lisp files are copied to `out/' verbatim
+       (t (let* ((loaded (load path)) ; All remaining lisp files are pages to be rendere
+                 (pkg (unless (not loaded)
+                        (find-package (string-upcase (get-package-name path)))))
+                 (render-func (unless (null pkg)
+                                (find-symbol (string-upcase "render") pkg))))
+            (unless (null render-func)
+              (write-file (funcall render-func) path))))))
+   in))
