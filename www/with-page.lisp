@@ -1,8 +1,4 @@
-(defpackage dt/fragments
-  (:use :cl :spinneret)
-  (:export #:with-page))
 
-(in-package :dt/fragments)
 
 (defmacro with-page ((&key title) &body body)
   `(with-html-string

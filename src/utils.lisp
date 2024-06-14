@@ -15,10 +15,8 @@
 (defun write-file (s path &optional (out (get-out-path path)))
   "Create an html file in `out' with filepath based on original `path' and with
    contents `s'."
-  (print path)
   (unless (cl-fad:directory-exists-p out)
     (let ((out-path (get-out-path path t)))
-      (print out-path)
       (str:to-file out-path s))))
 
 (defun get-out-path (file &optional template)

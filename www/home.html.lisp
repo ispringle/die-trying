@@ -1,9 +1,7 @@
-(defpackage home.html
-  (:use :cl :spinneret)
-  (:export render))
-(in-package :home.html)
-
-(defun render ()
-  (with-html-string
-    (:div
-     (:p "Hello world. This file was generated with Lisp. The HTML is rendered with Spinneret."))))
+(in-package www)
+(defpage "home.html"
+  (:title "Die Trying")
+  (main
+   (article
+    (section
+     (p "Hello, World!")))))

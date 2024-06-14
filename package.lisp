@@ -2,4 +2,5 @@
   (:use :cl)
   (:export #:start-dev
            #:process
-           #:watch))
+           #:watch
+           #:get-package-name))

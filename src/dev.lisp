@@ -12,7 +12,7 @@
       (format t "~a changed~%" file)
       (funcall func file change))))
 
-(defun watch (&optional (in "www/"))
+(defun watch (&optional (in '("www/" "fragments/")))
   "Watch `in' for file changes and rerun `process' on change."
   (file-watcher in (lambda (file change)
                      (declare (ignore file change))
@@ -31,3 +31,4 @@
   (process)
   (serve)
   (watch))
+

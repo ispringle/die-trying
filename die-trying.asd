@@ -7,12 +7,10 @@
                :str
                :hunchentoot
                :file-notify
-               :spinneret)
+               :flute)
   :components ((:file "package")
                (:module "src"
                 :components ((:file "utils")
                              (:file "dev")
-                             (:file "main")))
-               (:module "fragments"
-                :components ((:file "with-page"))))
+                             (:file "main"))))
   :description "A blog and templating system.")
