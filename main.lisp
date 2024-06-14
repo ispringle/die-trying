@@ -30,7 +30,7 @@
 
 (defun categorize-file (path)
   (cond
-    ((str:starts-with-p "#." (pathname-name path)) nil)
+    ((str:starts-with-p ".#" (pathname-name path)) nil)
     ((not (equal (pathname-type path) "html")) 'asset)
     (t (let ((dom (lquery:$ (initialize path))))
          (if (vector-empty-p (lquery:$ dom "html"))
