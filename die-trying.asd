@@ -6,10 +6,6 @@
                :cl-fad
                :str
                :hunchentoot
-               :file-notify
-               :spinneret)
-  :components ((:module "src"
-                :components
-                ((:file "main"))))
+               :file-notify)
+  :components ((:file "main"))
   :description "A blog and templating system.")
-

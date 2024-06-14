@@ -1,6 +1,6 @@
 (defpackage die-trying
   (:use :cl)
-  (:export :start-dev :process))
+  (:export :start-dev :process :watch))
 
 (in-package #:die-trying)
 
@@ -62,7 +62,7 @@
                 (setf updated-fragments
                       (cons (list :tag (getf dom-plist ':tag)
                                   :dom dom
-                                  :deps dependencies)
+                                  :depends-on dependencies)
                             updated-fragments))))
             fragments)
     updated-fragments))
@@ -71,15 +71,6 @@
   (car (vector-to-list (lquery:$ node (text)))))
 
 (defun expand (node fragments &optional (evaled ""))
-  (lquery:$ node "lisp" (each #'(lambda (node)
-                                  (lquery:$ node
-                                    (text)
-                                    #'(lambda (text)
-                                        (setf evaled
-                                              (eval-lisp-str-to-str
-                                               (car (vector-to-list text))))))))
-    (replace-with evaled))
-  
   (mapcar (lambda (fragment)
             (let ((tag (getf fragment ':tag))
                   (el (getf fragment ':dom)))
@@ -87,9 +78,6 @@
           fragments)
   node)
 (process)
-
-(defmacro frag (&body body)
-  `(format nil "~a" (spinneret:with-html ,@body)))
 
 ;;; Processors
 (defun process-input-files (dir)
@@ -158,9 +146,3 @@
   (process)
   (serve)
   (watch))
-;; (watch)
-
-(defun eval-lisp-str-to-str (lisp)
-  (format nil "~a" (eval (read-from-string lisp))))
-
-(print (eval-lisp-str-to-str "(+ 2 3)"))
