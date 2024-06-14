@@ -8,4 +8,4 @@
                :hunchentoot
                :file-notify)
   :components ((:file "main"))
-  :description "A blog and templating system.")
+  :description "A simple HTML templating system.")
