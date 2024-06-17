@@ -2,7 +2,7 @@
 
 You're not going to get rich, but you'll still die trying.
 
-In this cause there's not even the prospect of riches, this is only the source
+In this case there's not even the prospect of riches, this is only the source
 of my madness -- my neverending quest for the best way to create a website,
 under the pretense of a new website.
 
@@ -26,8 +26,10 @@ your compiled HTML.
 ** Todo's [1/5]
 - [X] Figure out some redneck ~<slot>~ system. (Not even redneck, just native
   slotting lol)
-- [ ] Add a ~<lisp>~ element for running arbitrary lisp code, defined in HTML
+- [ ] Add a ~<lisp>~ element for running arbitrary lisp code, defined in HTML tags
+  (this will likely never happen, it's slightly beyond the scope of this project)
 - [ ] Add tags for markup, such as ~<org-mode>~ and ~<markdown>,~ for rendering the
   inner text to the specified markup.
 - [ ] Add live-reload on the browser when files change in ~out/~
-- [ ] Possibly add an API server to make this Fullstack™️
+- [ ] +Possibly add an API server to make this Fullstack™️+
+- [ ] Figure out how to order element expansion to handle the case of nested elements

@@ -8,6 +8,19 @@
         <section>
           <h2>Lorem Ipsum</h2>
           <p>
+            The "Lorem Ipsum" page is a means of quickly assessing all styling
+            and features for an article. The idea was taken from
+            <a href="https://gwern.net/lorem"
+              >Gwern's own <code>/lorem</code> page</a
+            >, and is something I've been using for a little whilie now.
+          </p>
+          <p>
+            Paragraphs in the same section of an article will be justified in
+            the same "column". The margin of each section is manipulated with
+            the <code>::nth-child(an+b)</code> CSS selector to obtain the
+            staggered articles.
+          </p>
+          <p>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam pretium
             non tortor in maximus. Curabitur purus lorem, sagittis at magna et,
             rutrum feugiat lectus. Cras luctus augue turpis, vel lacinia est
@@ -19,11 +32,18 @@
             eget nec sem.
           </p>
         </section>
-        <img
-          src="https://source.unsplash.com/random?old-truck"
-          alt="Random old truck"
-          width="660px"
-        />
+        <figure>
+          <img
+            src="https://picsum.photos/600"
+            alt="Random picture"
+            width="600px"
+          />
+          <figcaption>
+            A random image sourced from <code>picsum.photos</code>. Originally
+            this was sourced from Unsplash but they seem to have allowed their
+            random image URL die.
+          </figcaption>
+        </figure>
         <section>
           <p>
             Integer ac ex rhoncus, suscipit nisl ut, euismod ante. Sed accumsan

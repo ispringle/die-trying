@@ -74,10 +74,9 @@
   (mapcar (lambda (fragment)
             (let ((tag (getf fragment ':tag))
                   (el (getf fragment ':dom)))
-              (lquery:$ node tag (append el))))
+              (lquery:$ node tag (prepend el))))
           fragments)
   node)
-(process)
 
 ;;; Processors
 (defun process-input-files (dir)

@@ -18,18 +18,24 @@
       margin: -1em 0;
       background: #d9efbe;
       max-width: 669px;
+      min-width: 669px;
     }
-    ::slotted(*:nth-child(3n+1)) {
-        margin-left: -5em;
+    ::slotted(*:nth-child(3n + 1)) {
+      margin-left: -5em;
     }
-    ::slotted(*:nth-child(3n+2)) {
+    ::slotted(*:nth-child(3n + 2)) {
       margin-left: 7em;
     }
-    ::slotted(*:nth-child(3n+3)) {
+    ::slotted(*:nth-child(3n + 3)) {
       margin-left: 0em;
     }
-    ::slotted(img) {
-        padding: 0.1em;
+    ::slotted(img),
+    ::slotted(figure) {
+      padding-left: 0.1em;
+      padding-right: 0.1em;
+      padding-top: 0.1em;
+      width: fit-content;
+      font-size: 0.75em;
     }
   </style>
   <article>

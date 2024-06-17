@@ -1,19 +1,45 @@
 <!doctype html>
 <html lang="en">
   <head></head>
+  <style>
+    div#mobile-prompt {
+      display: none;
+      @media only screen and (max-width: 1024px) {
+        display: block;
+        margin: auto;
+        text-align: center;
+        position: fixed;
+        bottom: 0;
+        background: #d9efbe;
+        padding: 1.5em 1em;
+      }
+    }
+    dt-header {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      margin: unset;
+      font-size: 2em;
+      @media (max-width: 1024px) {
+        font-size: unset;
+        position: unset;
+        transform: unset;
+        margin: auto;
+        padding-top: 50%;
+      }
+    }
+  </style>
   <body>
-    <main>
-      <dt-header
-        style="
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          margin: unset;
-          font-size: 2em;
-        "
-      ></dt-header>
-    </main>
+    <dt-header></dt-header>
+    <div id="mobile-prompt">
+      <p>
+        I just want you to know that I'm doing my best to provide a good viewing
+        experience on small screens and mobile devices, but this website has a
+        desktop-first design and is best viewed on screen with a resolution over
+        1024px.
+      </p>
+    </div>
     <dt-background></dt-background>
   </body>
 </html>

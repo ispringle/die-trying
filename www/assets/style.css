@@ -1,15 +1,15 @@
 @font-face {
-    font-family: '3Dumb';
-    src: url('/assets/fonts/23dumb/3Dumb.woff');
-        url('/assets/fonts/23dumb/3Dumb.ttf');
+    font-family: "3Dumb";
+    src: url("/assets/fonts/23dumb/3Dumb.woff"),
+        url("/assets/fonts/23dumb/3Dumb.ttf");
     font-weight: normal;
     font-style: normal;
 }
 
 @font-face {
-    font-family: '2Dumb';
-    src: url('/assets/fonts/23dumb/2Dumb.woff');
-        url('/assets/fonts/23dumb/2Dumb.ttf');
+    font-family: "2Dumb";
+    src: url("/assets/fonts/23dumb/2Dumb.woff"),
+        url("/assets/fonts/23dumb/2Dumb.ttf");
     font-weight: normal;
     font-style: normal;
 }
@@ -17,15 +17,23 @@
 html,
 body {
     width: 100%;
-    height: 100%;
     margin: 0;
-    font-family: 'Oldenburg' serif;
+    font-family: "Oldenburg", serif;
+    counter-reset: fn;
 }
 
 body {
     overflow-x: auto;
 }
 
-h2, h3, h4, h5, h6 {
-    font-family: '2Dumb';
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: "2Dumb";
+}
+
+section > p {
+    font-size: 20px;
 }
