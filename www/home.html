@@ -5,6 +5,7 @@
     <dt-header></dt-header>
     <main>
       <dt-roll>
+        <workout-2024-06-17></workout-2024-06-17>
         <div>
           <a href="/phone-debloat.html">
             <article>
@@ -20,6 +21,7 @@
               </p>
             </article>
           </a>
+          <span class="date">June 16th, 2024</span>
         </div>
         <div>
           <a href="/lorem-ipsum.html">
@@ -38,11 +40,24 @@
             box-shadow: -6.9px 6.9px rgba(0, 0, 0, 0.5);
             padding: 1em 1em;
             max-width: 669px;
-            margin: 4em 0;
           }
           a {
             text-decoration: none;
             color: unset;
+          }
+          dt-roll > div {
+              position: relative;
+          }
+          div .date {
+            font-size: 0.6em;
+            position: absolute;
+            left: 600px;
+            width: max-content;
+            border: solid black 1px;
+            box-shadow: -6.9px 6.9px rgba(0, 0, 0, 0.5);
+            padding: 1.5em 1em;
+            margin: -1em 0;
+            background: #d9efbe;
           }
         </style>
       </dt-roll>

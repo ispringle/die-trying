@@ -2,11 +2,12 @@
   <style>
     :host {
         display: block;
-        width: 669px;
         margin: 2em auto;
+        width: calc(5em + 7em + 669px);
     }
     ::slotted(*) {
         max-width: 669px;
+        min-width: 669px;
         margin: 4em 0;
     }
     ::slotted(*:nth-child(3n + 1)) {
