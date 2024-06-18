@@ -1,35 +1,36 @@
 <!doctype html>
 <html lang="en">
-  <head></head>
-  <style>
-    div#mobile-prompt {
-      display: none;
-      @media only screen and (max-width: 1024px) {
-        display: block;
-        margin: auto;
-        text-align: center;
-        position: fixed;
-        bottom: 0;
-        background: #d9efbe;
-        padding: 1.5em 1em;
+  <head>
+    <style>
+      div#mobile-prompt {
+        display: none;
+        @media only screen and (max-width: 1024px) {
+          display: block;
+          margin: auto;
+          text-align: center;
+          position: fixed;
+          bottom: 0;
+          background: #d9efbe;
+          padding: 1.5em 1em;
+        }
       }
-    }
-    dt-header {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      margin: unset;
-      font-size: 2em;
-      @media (max-width: 1024px) {
-        font-size: unset;
-        position: unset;
-        transform: unset;
-        margin: auto;
-        padding-top: 50%;
+      dt-header {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        margin: unset;
+        font-size: 2em;
+        @media (max-width: 1024px) {
+          font-size: unset;
+          position: unset;
+          transform: unset;
+          margin: auto;
+          padding-top: 50%;
+        }
       }
-    }
-  </style>
+    </style>
+  </head>
   <body>
     <dt-header></dt-header>
     <div id="mobile-prompt">
@@ -40,6 +41,7 @@
         1024px.
       </p>
     </div>
+    <dt-footer><h-card></h-card><span>CC BY-NC-SA</span></dt-footer>
     <dt-background></dt-background>
   </body>
 </html>

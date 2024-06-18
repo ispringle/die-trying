@@ -37,3 +37,26 @@ h6 {
 section > p {
     font-size: 20px;
 }
+
+dt-article div.meta {
+    position: absolute;
+    left: 669px;
+    top: 69px;
+    font-size: 0.6em;
+
+    border: solid black 1px;
+    box-shadow: -6.9px 6.9px rgba(0, 0, 0, 0.5);
+    padding: 1.5em 1em;
+    margin: -1em 0;
+    background: #efc9be;
+    min-width: 200px;
+
+    & time {
+        display: block;
+        width: max-content;
+    }
+
+    & a {
+        color: inherit;
+    }
+}
