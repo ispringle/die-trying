@@ -1,0 +1,29 @@
+# Git
+.git
+.gitignore
+
+# Output directory (will be generated)
+out/
+
+# Lisp compiled files
+*.fasl
+*.fas
+*.lib
+*.dx64fsl
+*.lx64fsl
+
+# Editor files
+.#*
+*~
+*.swp
+*.swo
+.DS_Store
+
+# Documentation
+README.org
+LICENSE
+
+# Build artifacts
+*.o
+*.so
+

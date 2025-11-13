@@ -1,0 +1,38 @@
+name: Deploy to Cloudflare Pages
+
+on:
+  push:
+    branches:
+      - master  # or main, depending on your default branch
+  workflow_dispatch:  # Allow manual trigger
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build -t die-trying-builder .
+
+      - name: Extract built site from container
+        run: |
+          # Create a container from the image
+          docker create --name builder die-trying-builder
+          # Copy the out/ directory from the container
+          docker cp builder:/app/out ./out
+          # Clean up
+          docker rm builder
+
+      - name: Publish to Cloudflare Pages
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          projectName: die-trying  # Change this to your Cloudflare Pages project name
+          directory: out
+          # Optional: Git branch for deployment
+          branch: master
+
