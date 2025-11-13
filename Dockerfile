@@ -15,6 +15,13 @@ WORKDIR /app
 
 COPY die-trying.asd /app/die-trying.asd
 COPY main.lisp /app/main.lisp
+
+RUN sbcl --non-interactive \
+         --eval '(load "~/quicklisp/setup.lisp")' \
+         --eval '(push #P"/app/" asdf:*central-registry*)' \
+         --eval '(ql:quickload :die-trying :silent t)' \
+         --quit
+
 COPY build.lisp /app/build.lisp
 COPY www/ /app/www/
 
