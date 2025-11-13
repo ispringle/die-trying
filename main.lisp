@@ -70,6 +70,28 @@
 (defun node-children-to-str (node)
   (car (vector-to-list (lquery:$ node (text)))))
 
+(defun topological-sort (fragments)
+  "Sort fragments by dependencies so leaves (no deps) come first."
+  (let ((sorted nil)
+        (remaining (copy-list fragments)))
+    (loop while remaining do
+      (let ((no-deps (remove-if (lambda (frag)
+                                  ;; Has dependencies that aren't yet in sorted
+                                  (some (lambda (dep)
+                                          (not (member dep (mapcar (lambda (f) (getf f ':tag)) sorted)
+                                                          :test #'string=)))
+                                        (getf frag ':depends-on)))
+                                remaining)))
+        (if no-deps
+            (progn
+              (setf sorted (append sorted no-deps))
+              (setf remaining (set-difference remaining no-deps)))
+            (progn
+              ;; Circular dependency or other issue - just append remaining and break
+              (setf sorted (append sorted remaining))
+              (setf remaining nil)))))
+    sorted))
+
 (defun expand (node fragments &optional (evaled ""))
   (mapcar (lambda (fragment)
             (let ((tag (getf fragment ':tag))
@@ -100,13 +122,16 @@
 (defun process-fragments (fragment-paths)
   (let* ((fragments (build-fragment-objects fragment-paths))
          (fragments (find-dependencies fragments))
+         (sorted-fragments (topological-sort fragments))
          (expanded-fragments nil))
+    ;; Expand in dependency order - leaves first
     (mapcar (lambda (fragment)
-              (setf expanded-fragments
-                    (cons (list :tag (getf fragment ':tag)
-                                :dom (expand (getf fragment ':dom) fragments))
-                          expanded-fragments)))
-            fragments)
+              (let ((expanded-dom (expand (getf fragment ':dom) expanded-fragments)))
+                (setf expanded-fragments
+                      (cons (list :tag (getf fragment ':tag)
+                                  :dom expanded-dom)
+                            expanded-fragments))))
+            sorted-fragments)
     expanded-fragments))
 
 (defun process (&optional (in "www/") (out "out/"))

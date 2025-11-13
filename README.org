@@ -23,7 +23,7 @@ but tbh I've never tried.
 To just output some files you can use ~die-trying:proces~ by itself to generate
 your compiled HTML.
 
-** Todo's [1/5]
+** Todo's [2/5]
 - [X] Figure out some redneck ~<slot>~ system. (Not even redneck, just native
   slotting lol)
 - [ ] Add a ~<lisp>~ element for running arbitrary lisp code, defined in HTML tags
@@ -32,4 +32,4 @@ your compiled HTML.
   inner text to the specified markup.
 - [ ] Add live-reload on the browser when files change in ~out/~
 - [ ] +Possibly add an API server to make this Fullstack™️+
-- [ ] Figure out how to order element expansion to handle the case of nested elements
+- [X] Figure out how to order element expansion to handle the case of nested elements
