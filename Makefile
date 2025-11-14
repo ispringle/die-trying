@@ -4,8 +4,8 @@
 .DEFAULT_GOAL := help
 
 # Docker image names
-TEST_IMAGE := die-trying-tests
-BUILD_IMAGE := die-trying-builder
+TEST_IMAGE := die-trying-test
+BUILD_IMAGE := die-trying
 
 help: ## Show this help message
 	@echo "Die Trying - Static Site Generator"
@@ -54,10 +54,12 @@ build: build-docker ## Build the site (Docker)
 
 build-docker: ## Build the site using Docker
 	@echo "Building site with Docker..."
-	@docker build -t $(BUILD_IMAGE) . -q
-	@docker create --name builder $(BUILD_IMAGE)
-	@docker cp builder:/app/out ./out
-	@docker rm builder
+	@docker build -t $(BUILD_IMAGE) .
+	@echo "Extracting output from Docker container..."
+	@rm -rf out/
+	@docker create --name die-trying-builder $(BUILD_IMAGE)
+	@docker cp die-trying-builder:/app/out ./out
+	@docker rm die-trying-builder
 	@echo "Build complete! Site generated in ./out/"
 
 build-local: ## Build the site locally (requires local SBCL)

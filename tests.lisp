@@ -181,15 +181,15 @@
   (with-temp-directory (temp-dir)
     (let* ((input-dir (format nil "~awww/" temp-dir))
            (output-dir (format nil "~aout/" temp-dir))
-           (elements-dir (format nil "~aelements/" input-dir))
+           (fragments-dir (format nil "~afragments/" input-dir))
            (assets-dir (format nil "~aassets/" input-dir)))
       
       ;; Create directory structure
-      (ensure-directories-exist elements-dir)
+      (ensure-directories-exist fragments-dir)
       (ensure-directories-exist assets-dir)
       
       ;; Create a simple fragment
-      (create-test-file (format nil "~adt-header.html" elements-dir)
+      (create-test-file (format nil "~adt-header.html" fragments-dir)
                         "<header><h1>My Site</h1></header>")
       
       ;; Create a simple template
@@ -217,16 +217,16 @@
   (with-temp-directory (temp-dir)
     (let* ((input-dir (format nil "~awww/" temp-dir))
            (output-dir (format nil "~aout/" temp-dir))
-           (elements-dir (format nil "~aelements/" input-dir)))
+           (fragments-dir (format nil "~afragments/" input-dir)))
       
       ;; Create directory structure
-      (ensure-directories-exist elements-dir)
+      (ensure-directories-exist fragments-dir)
       
       ;; Create nested fragments: dt-logo (leaf), dt-header (uses dt-logo), template (uses dt-header)
-      (create-test-file (format nil "~adt-logo.html" elements-dir)
+      (create-test-file (format nil "~adt-logo.html" fragments-dir)
                         "<img src='logo.png' alt='Logo' />")
       
-      (create-test-file (format nil "~adt-header.html" elements-dir)
+      (create-test-file (format nil "~adt-header.html" fragments-dir)
                         "<header><dt-logo></dt-logo><h1>My Site</h1></header>")
       
       (create-test-file (format nil "~aindex.html" input-dir)
@@ -246,16 +246,16 @@
   (with-temp-directory (temp-dir)
     (let* ((input-dir (format nil "~awww/" temp-dir))
            (output-dir (format nil "~aout/" temp-dir))
-           (elements-dir (format nil "~aelements/" input-dir)))
+           (fragments-dir (format nil "~afragments/" input-dir)))
       
       ;; Create directory structure
-      (ensure-directories-exist elements-dir)
+      (ensure-directories-exist fragments-dir)
       
       ;; Create shared fragments
-      (create-test-file (format nil "~adt-header.html" elements-dir)
+      (create-test-file (format nil "~adt-header.html" fragments-dir)
                         "<header>Header</header>")
       
-      (create-test-file (format nil "~adt-footer.html" elements-dir)
+      (create-test-file (format nil "~adt-footer.html" fragments-dir)
                         "<footer>Footer</footer>")
       
       ;; Create multiple templates

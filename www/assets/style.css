@@ -60,3 +60,9 @@ dt-article div.meta {
         color: inherit;
     }
 }
+
+/* Hide metadata elements used only for machine consumption */
+.p-excerpt,
+.u-url {
+    display: none;
+}

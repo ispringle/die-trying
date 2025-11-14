@@ -18,5 +18,5 @@
     (format t "  ~A~%" file)))
 
 (format t "~%Exiting...~%")
-(quit)
+(uiop:quit 0)
 

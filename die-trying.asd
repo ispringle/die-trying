@@ -6,7 +6,8 @@
                :cl-fad
                :str
                :hunchentoot
-               :file-notify)
+               :file-notify
+               :spinneret)
   :components ((:file "main"))
   :description "A simple HTML templating system.")
 
