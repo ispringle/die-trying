@@ -1,6 +1,16 @@
 (defpackage die-trying
   (:use :cl)
-  (:export :start-dev :process :watch))
+  (:export :start-dev
+           :process
+           :watch
+           ;; Utility functions (exported for testing)
+           :vector-to-list
+           :vector-empty-p
+           :categorize-file
+           :topological-sort
+           :get-out-path
+           :build-fragment-objects
+           :find-dependencies))
 
 (in-package #:die-trying)
 

@@ -5,14 +5,45 @@ on:
     branches:
       - master  # or main, depending on your default branch
   workflow_dispatch:  # Allow manual trigger
+    inputs:
+      skip-tests:
+        description: 'Skip tests (emergency deploy)'
+        required: false
+        type: boolean
+        default: false
 
 jobs:
-  build-and-deploy:
+  test:
     runs-on: ubuntu-latest
+    # Run tests unless explicitly skipped via manual trigger
+    if: ${{ github.event_name == 'push' || !inputs.skip-tests }}
     
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Build test Docker image
+        run: docker build -t die-trying-tests -f Dockerfile.test .
+
+      - name: Run tests
+        run: docker run --rm die-trying-tests
+
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    # For automated pushes, require tests to pass
+    # For manual triggers, can proceed independently
+    needs: [test]
+    if: ${{ always() && (github.event_name == 'push' && needs.test.result == 'success') || (github.event_name == 'workflow_dispatch' && (needs.test.result == 'success' || inputs.skip-tests)) }}
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Warning - Tests Skipped
+        if: ${{ inputs.skip-tests }}
+        run: |
+          echo "::warning::⚠️ TESTS WERE SKIPPED - This is an emergency deployment!"
+          echo "::warning::Please ensure tests pass as soon as possible."
 
       - name: Build Docker image
         run: docker build -t die-trying-builder .
