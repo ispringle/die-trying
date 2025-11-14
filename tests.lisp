@@ -101,19 +101,19 @@
     (let* ((css-filename "test.css")
            (css-file (merge-pathnames css-filename temp-dir)))
       (create-test-file css-file "body { color: red; }")
-      (is (equal 'asset (categorize-file css-file))))
+      (is (equal :asset (categorize-file css-file))))
     
     ;; Test fragment (HTML without <html> tag)
     (let* ((fragment-filename "test-fragment.html")
            (fragment-file (merge-pathnames fragment-filename temp-dir)))
       (create-test-file fragment-file "<div>Fragment content</div>")
-      (is (equal 'fragment (categorize-file fragment-file))))
+      (is (equal :fragment (categorize-file fragment-file))))
     
     ;; Test template (HTML with <html> tag)
     (let* ((template-filename "test-template.html")
            (template-file (merge-pathnames template-filename temp-dir)))
       (create-test-file template-file "<!DOCTYPE html><html><head></head><body></body></html>")
-      (is (equal 'template (categorize-file template-file))))
+      (is (equal :template (categorize-file template-file))))
     
     ;; Test that lock files are ignored
     (let* ((lock-filename ".#test.html")

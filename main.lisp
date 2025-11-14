@@ -49,13 +49,13 @@
     ;; .lisp files in fragments/ are fragments, elsewhere they're ignored (already processed as templates)
     ((equal (pathname-type path) "lisp")
      (if (search "fragments" (namestring path))
-         'fragment
+         :fragment
          nil))
-    ((not (equal (pathname-type path) "html")) 'asset)
+    ((not (equal (pathname-type path) "html")) :asset)
     (t (let ((dom (lquery:$ (initialize path))))
          (if (vector-empty-p (lquery:$ dom "html"))
-             'fragment
-             'template)))))
+             :fragment
+             :template)))))
 
 (defun path-to-dom (path &optional (fragment nil))
   (if fragment
@@ -73,10 +73,10 @@
                                                until (eq form 'eof)
                                                do (setf result (eval form)))
                                          result))))
-                    (list :function fragment-fn :tag tag :type 'lisp))
+                    (list :function fragment-fn :tag tag :type :lisp))
                   ;; For .html fragments, parse DOM as before
                   (let ((dom (path-to-dom path t)))
-                    (list :dom dom :tag tag :type 'html)))))
+                    (list :dom dom :tag tag :type :html)))))
           paths))
 
 (defun find-dependencies (fragments)
@@ -85,7 +85,7 @@
               (let ((dependencies nil)
                     (frag-type (getf fragment-plist ':type)))
                 ;; Only check dependencies for HTML fragments
-                (when (equal frag-type 'html)
+                (when (equal frag-type :html)
                   (let ((dom (getf fragment-plist ':dom)))
                     (mapcar (lambda (other-fragment)
                               (let ((tag (getf other-fragment ':tag)))
@@ -202,11 +202,11 @@
                     (frag-type (getf fragment ':type)))
                 (cond
                   ;; HTML fragments: prepend DOM as before
-                  ((equal frag-type 'html)
+                  ((equal frag-type :html)
                    (let ((el (getf fragment ':dom)))
                      (lquery:$ node tag (prepend el))))
                   ;; Lisp fragments: call function with metadata and insert HTML
-                  ((equal frag-type 'lisp)
+                  ((equal frag-type :lisp)
                    (let* ((fragment-fn (getf fragment ':function))
                           (html-output (when (functionp fragment-fn)
                                          (apply fragment-fn filtered-metadata))))
@@ -381,9 +381,9 @@
   (let (templates fragments)
     (mapc-walk-directory (lambda (path)
                            (let ((category (categorize-file path)))
-                             (cond ((equal category 'template) (setf templates (cons path templates)))
-                                   ((equal category 'fragment) (setf fragments (cons path fragments)))
-                                   ((equal category 'asset) (copy-file path))
+                             (cond ((equal category :template) (setf templates (cons path templates)))
+                                   ((equal category :fragment) (setf fragments (cons path fragments)))
+                                   ((equal category :asset) (copy-file path))
                                    (t) (nil))))
                          dir)
     (list templates fragments)))
@@ -405,19 +405,19 @@
               (let ((frag-type (getf fragment ':type)))
                 (cond
                   ;; HTML fragments: expand with other fragments
-                  ((equal frag-type 'html)
+                  ((equal frag-type :html)
                    (let ((expanded-dom (expand (getf fragment ':dom) expanded-fragments)))
                      (setf expanded-fragments
                            (cons (list :tag (getf fragment ':tag)
                                        :dom expanded-dom
-                                       :type 'html)
+                                       :type :html)
                                  expanded-fragments))))
                   ;; Lisp fragments: just pass through (they're already functions)
-                  ((equal frag-type 'lisp)
+                  ((equal frag-type :lisp)
                    (setf expanded-fragments
                          (cons (list :tag (getf fragment ':tag)
                                      :function (getf fragment ':function)
-                                     :type 'lisp)
+                                     :type :lisp)
                                expanded-fragments)))
                   ;; Fallback for compatibility
                   (t
