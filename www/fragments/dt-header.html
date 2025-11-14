@@ -13,12 +13,20 @@
       font-family: "3dumb";
       font-size: 5em;
       color: black;
+      transition: transform 0.3s ease;
     }
     a {
       text-decoration: none;
     }
+    a:hover header {
+      transform: translateY(-3px);
+    }
     img {
       width: 1em;
+      transition: transform 0.3s ease;
+    }
+    a:hover img {
+      transform: rotate(5deg) scale(1.05);
     }
   </style>
   <a href="/home.html" title="Go home loser!">

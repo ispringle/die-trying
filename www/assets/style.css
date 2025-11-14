@@ -14,6 +14,10 @@
     font-style: normal;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
 html,
 body {
     width: 100%;
@@ -40,7 +44,7 @@ section > p {
 
 dt-article div.meta {
     position: absolute;
-    left: 669px;
+    left: 748px;
     top: 69px;
     font-size: 0.6em;
 
@@ -50,6 +54,10 @@ dt-article div.meta {
     margin: -1em 0;
     background: #efc9be;
     min-width: 200px;
+    
+    opacity: 0;
+    animation: slideInRight 0.7s ease-out 0.4s forwards;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 
     & time {
         display: block;
@@ -61,8 +69,34 @@ dt-article div.meta {
     }
 }
 
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px) rotate(-2deg);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0) rotate(0deg);
+    }
+}
+
 /* Hide metadata elements used only for machine consumption */
 .p-excerpt,
 .u-url {
     display: none;
+}
+
+/* Respect reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+    
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
 }

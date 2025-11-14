@@ -60,6 +60,11 @@
           dt-roll > div {
             position: relative;
           }
+          dt-roll > div:hover article {
+            transform: translateY(-2px);
+            box-shadow: -8px 10px rgba(0, 0, 0, 0.6);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+          }
           div .date {
             font-size: 0.6em;
             position: absolute;

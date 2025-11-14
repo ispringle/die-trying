@@ -10,6 +10,18 @@
       position: relative;
       font-size: 1.5em;
       margin: 4em 0;
+      animation: pageTurn 0.8s ease-out;
+      transform-origin: left center;
+    }
+    @keyframes pageTurn {
+      0% {
+        opacity: 0;
+        transform: perspective(2000px) rotateY(85deg) translateX(100px) scale(0.8);
+      }
+      100% {
+        opacity: 1;
+        transform: perspective(2000px) rotateY(0deg) translateX(0) scale(1);
+      }
     }
     ::slotted(*) {
       border: solid black 1px;
@@ -19,15 +31,45 @@
       background: #d9efbe;
       max-width: 669px;
       min-width: 669px;
+      opacity: 0;
+      animation: slideIn 0.6s ease-out forwards;
+    }
+    ::slotted(*:nth-child(5n + 1)) {
+      background: #d9efbe;
+    }
+    ::slotted(*:nth-child(5n + 2)) {
+      background: #c9e4b3;
+    }
+    ::slotted(*:nth-child(5n + 3)) {
+      background: #e8f5d1;
+    }
+    ::slotted(*:nth-child(5n + 4)) {
+      background: #d1eaaf;
+    }
+    ::slotted(*:nth-child(5n + 5)) {
+      background: #e0f2c8;
     }
     ::slotted(*:nth-child(3n + 1)) {
       margin-left: -5em;
+      animation-delay: 0.1s;
     }
     ::slotted(*:nth-child(3n + 2)) {
       margin-left: 7em;
+      animation-delay: 0.2s;
     }
     ::slotted(*:nth-child(3n + 3)) {
       margin-left: 0em;
+      animation-delay: 0.3s;
+    }
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateX(-30px) rotate(-1deg);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0) rotate(0deg);
+      }
     }
     ::slotted(img),
     ::slotted(figure) {

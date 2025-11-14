@@ -10,6 +10,26 @@
       margin: -1em 0;
       background: #fff;
       max-width: 669px;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+    ::slotted(*:hover) {
+      transform: translateY(-1px) scale(1.002);
+      box-shadow: -7px 9px rgba(0, 0, 0, 0.55);
+    }
+    ::slotted(*:nth-child(5n + 1)) {
+      background: #fff;
+    }
+    ::slotted(*:nth-child(5n + 2)) {
+      background: #faf8f3;
+    }
+    ::slotted(*:nth-child(5n + 3)) {
+      background: #f5f1e8;
+    }
+    ::slotted(*:nth-child(5n + 4)) {
+      background: #fefdfb;
+    }
+    ::slotted(*:nth-child(5n + 5)) {
+      background: #f8f5ed;
     }
     ::slotted(.date) {
         font-size: 0.6em;
