@@ -211,7 +211,7 @@
                           (html-output (when (functionp fragment-fn)
                                          (apply fragment-fn filtered-metadata))))
                      (when (stringp html-output)
-                       (lquery:$ node tag (html html-output)))))
+                       (lquery:$ node tag (prepend html-output)))))
                   ;; Fallback for old-style fragments without type
                   (t
                    (when (getf fragment ':dom)
