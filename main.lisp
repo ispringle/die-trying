@@ -244,9 +244,13 @@
           (format nil "~a-~a-~a" year month day))))))
 
 (defun parse-date-string (date-str)
-  "Parse YYYY-MM-DD string into (year month day)."
+  "Parse YYYY-MM-DD or ISO 8601 datetime string into (year month day)."
   (when date-str
-    (let ((parts (str:split "-" date-str)))
+    ;; Extract just the date portion if this is an ISO 8601 datetime
+    (let* ((date-only (if (search "T" date-str)
+                          (subseq date-str 0 (position #\T date-str))
+                          date-str))
+           (parts (str:split "-" date-only)))
       (when (= (length parts) 3)
         (handler-case
             (mapcar #'parse-integer parts)
