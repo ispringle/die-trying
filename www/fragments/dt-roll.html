@@ -19,6 +19,21 @@
     ::slotted(*:nth-child(3n + 3)) {
       margin-left: 0em;
     }
+    @media (max-width: 1024px) {
+      :host {
+        width: 100%;
+        padding: 0 1em;
+      }
+      ::slotted(*) {
+        max-width: 100%;
+        min-width: unset;
+      }
+      ::slotted(*:nth-child(3n + 1)),
+      ::slotted(*:nth-child(3n + 2)),
+      ::slotted(*:nth-child(3n + 3)) {
+        margin-left: 0;
+      }
+    }
   </style>
   <slot></slot>
 </template>

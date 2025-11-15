@@ -75,6 +75,17 @@
             padding: 1.5em 1em;
             margin: -1em 0;
             background: #d9efbe;
+          }
+          @media (max-width: 1024px) {
+            article {
+              max-width: 100%;
+            }
+            div .date {
+              position: relative;
+              left: unset;
+              margin: 1em 0;
+              display: block;
+            }
           }"))))
       (:dt-footer
         (:h-card)

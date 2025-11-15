@@ -42,4 +42,36 @@
   .ref input[type="checkbox"] {
     display: none;
   }
+
+  @media (max-width: 1024px) {
+    dt-note {
+      display: inline;
+    }
+
+    dt-note > *:not(.ref) {
+      position: fixed;
+      left: 1em;
+      right: 1em;
+      top: 50%;
+      transform: translateY(-50%);
+      width: auto;
+      max-width: calc(100vw - 4em);
+      padding: 1em;
+      z-index: 1000;
+    }
+    
+    dt-note > *:not(.ref)::before {
+      position: static;
+      left: unset;
+      display: inline;
+      margin-right: 0.5em;
+    }
+
+    .ref:hover ~ *,
+    .ref:has(> input:checked) ~ * {
+      visibility: visible;
+      opacity: 1;
+      transform: translateY(-50%) scale(1);
+    }
+  }
 </style>

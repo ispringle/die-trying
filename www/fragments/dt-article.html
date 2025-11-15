@@ -79,6 +79,21 @@
       width: fit-content;
       font-size: 0.75em;
     }
+    @media (max-width: 1024px) {
+      :host {
+        width: calc(100vw - 2em);
+        max-width: 100%;
+      }
+      ::slotted(*) {
+        max-width: 100%;
+        min-width: unset;
+      }
+      ::slotted(*:nth-child(3n + 1)),
+      ::slotted(*:nth-child(3n + 2)),
+      ::slotted(*:nth-child(3n + 3)) {
+        margin-left: 0;
+      }
+    }
   </style>
   <article>
     <slot></slot>

@@ -108,3 +108,14 @@ dt-article div.meta {
         transition-duration: 0.01ms !important;
     }
 }
+
+/* Mobile responsive styles */
+@media (max-width: 1024px) {
+    dt-article div.meta {
+        position: relative;
+        left: unset;
+        top: unset;
+        margin: 1em 0;
+        max-width: 100%;
+    }
+}
