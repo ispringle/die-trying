@@ -1,23 +1,14 @@
 <template shadowrootmode="open">
   <style>
     :host {
-        display: block;
-        margin: 2em auto;
-        width: calc(5em + 7em + 669px);
+      display: block;
+      margin: 2em auto;
+      max-width: 800px;
+      padding: 0 1em;
     }
     ::slotted(*) {
-        max-width: 669px;
-        min-width: 669px;
-        margin: 4em 0;
-    }
-    ::slotted(*:nth-child(3n + 1)) {
-      margin-left: -5em;
-    }
-    ::slotted(*:nth-child(3n + 2)) {
-      margin-left: 7em;
-    }
-    ::slotted(*:nth-child(3n + 3)) {
-      margin-left: 0em;
+      max-width: 100%;
+      margin: 2em 0;
     }
     @media (max-width: 1024px) {
       :host {
@@ -26,12 +17,6 @@
       }
       ::slotted(*) {
         max-width: 100%;
-        min-width: unset;
-      }
-      ::slotted(*:nth-child(3n + 1)),
-      ::slotted(*:nth-child(3n + 2)),
-      ::slotted(*:nth-child(3n + 3)) {
-        margin-left: 0;
       }
     }
   </style>

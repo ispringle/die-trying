@@ -35,9 +35,9 @@
                       (:div
                         (:a :href url
                           (:article :class "h-entry"
+                            (:span :class "date" date-pretty)
                             (:h2 :class "p-name" title)
-                            (:p :class "p-summary" excerpt)))
-                        (:span :class "date" date-pretty)))))))
+                            (:p :class "p-summary" excerpt)))))))))
           ;; Manually add lorem-ipsum at the bottom
           (:div
             (:a :href "/lorem-ipsum.html"
@@ -47,11 +47,12 @@
           (:style
            (:raw "
           article {
-            background: #d9efbe;
-            border: solid black 1px;
-            box-shadow: -6.9px 6.9px rgba(0, 0, 0, 0.5);
+            background: #fff;
+            border: 4px solid #000;
+            box-shadow: 4px 0 0 rgba(255, 0, 0, 0.6), -4px 0 0 rgba(0, 255, 255, 0.6);
             padding: 1em 1em;
-            max-width: 669px;
+            max-width: 100%;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
           }
           a {
             text-decoration: none;
@@ -61,34 +62,29 @@
             position: relative;
           }
           dt-roll > div:hover article {
-            transform: translateY(-2px);
-            box-shadow: -8px 10px rgba(0, 0, 0, 0.6);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 0 0 rgba(255, 0, 0, 0.7), -6px 0 0 rgba(0, 255, 255, 0.7);
           }
-          div .date {
-            font-size: 0.6em;
-            position: absolute;
-            left: 600px;
-            width: max-content;
-            border: solid black 1px;
-            box-shadow: -6.9px 6.9px rgba(0, 0, 0, 0.5);
-            padding: 1.5em 1em;
-            margin: -1em 0;
-            background: #d9efbe;
+          article .date {
+            display: inline-block;
+            font-size: 0.7em;
+            font-family: 'Courier New', monospace;
+            background: #000;
+            color: #fff;
+            padding: 0.3em 0.6em;
+            margin-bottom: 0.5em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+          }
+          article h2 {
+            margin-top: 0.5em;
           }
           @media (max-width: 1024px) {
             article {
               max-width: 100%;
-            }
-            div .date {
-              position: relative;
-              left: unset;
-              margin: 1em 0;
-              display: block;
             }
           }"))))
       (:dt-footer
         (:h-card)
         (:span "CC BY-NC-SA"))
       (:dt-background))))
-

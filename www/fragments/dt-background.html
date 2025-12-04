@@ -4,76 +4,589 @@
       isolation: isolate;
       position: fixed;
       top: 0;
-      width: 100%;
-      height: 100%;
-      z-index: -100;
-    }
-
-    div:first-of-type {
-      backdrop-filter: saturate(1);
-      background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAGklEQVR42mP4DwUMQACm/yMBBhhAEURWDgIAWj4v0SL/2gUAAAAASUVORK5CYII=");
+      left: 0;
       width: 100vw;
       height: 100vh;
-      position: fixed;
-      left: 0;
-      top: 0;
-      z-index: 1;
+      z-index: -100;
+      background: #000;
     }
 
-    div:nth-of-type(2) {
-      background: hsl(180, 100%, 50%);
-      position: absolute;
-      top: 0;
+    .checkerboard {
       width: 100%;
       height: 100%;
-      mix-blend-mode: darken;
-      animation: 1.1s infinite rotate-background;
-      animation-play-state: paused;
-      animation-delay: calc(var(--scroll) * -1s);
+      display: grid;
+      grid-template-columns: repeat(16, 1fr);
+      grid-template-rows: repeat(12, 1fr);
+      filter: contrast(1.1) brightness(0.95);
     }
 
-    @keyframes rotate-background {
-      to {
-        background: hsl(0, 100%, 50%);
-      }
+    .checker {
+      animation: checkerWave 4s ease-in-out infinite;
     }
 
-    div:last-child {
+    .checker:nth-child(even) { background: #000; }
+    .checker:nth-child(odd) { background: #fff; }
+
+    .checker:nth-child(16n+1) { animation-delay: 0s; }
+    .checker:nth-child(16n+2) { animation-delay: 0.05s; }
+    .checker:nth-child(16n+3) { animation-delay: 0.1s; }
+    .checker:nth-child(16n+4) { animation-delay: 0.15s; }
+    .checker:nth-child(16n+5) { animation-delay: 0.2s; }
+    .checker:nth-child(16n+6) { animation-delay: 0.25s; }
+    .checker:nth-child(16n+7) { animation-delay: 0.3s; }
+    .checker:nth-child(16n+8) { animation-delay: 0.35s; }
+    .checker:nth-child(16n+9) { animation-delay: 0.4s; }
+    .checker:nth-child(16n+10) { animation-delay: 0.45s; }
+    .checker:nth-child(16n+11) { animation-delay: 0.5s; }
+    .checker:nth-child(16n+12) { animation-delay: 0.55s; }
+    .checker:nth-child(16n+13) { animation-delay: 0.6s; }
+    .checker:nth-child(16n+14) { animation-delay: 0.65s; }
+    .checker:nth-child(16n+15) { animation-delay: 0.7s; }
+    .checker:nth-child(16n+16) { animation-delay: 0.75s; }
+
+    @keyframes checkerWave {
+      0%, 100% { transform: scale(1); filter: brightness(1); }
+      50% { transform: scale(1.15); filter: brightness(1.1); }
+    }
+
+    .scanlines {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
       height: 100%;
-      background: linear-gradient(to top, #49297e, transparent),
-        url(/assets/noise.svg);
-      filter: contrast(290%) brightness(1000%);
-      animation: 15s infinite rotate-contrast;
+      background: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.15) 0px, rgba(0, 0, 0, 0.15) 1px, transparent 1px, transparent 2px);
+      pointer-events: none;
+      z-index: 10;
+      animation: scanlineFlicker 0.1s infinite;
     }
 
-    @keyframes rotate-contrast {
-      0% {
-        filter: contrast(175%) brightness(1000%);
+    @keyframes scanlineFlicker {
+      0% { opacity: 0.8; }
+      50% { opacity: 0.85; }
+      100% { opacity: 0.8; }
+    }
+
+    .noise {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 15;
+      animation: noiseShift 0.3s infinite;
+    }
+
+    @keyframes noiseShift {
+      0% { transform: translate(0, 0); }
+      25% { transform: translate(-2px, 2px); }
+      50% { transform: translate(2px, -2px); }
+      75% { transform: translate(-2px, -2px); }
+      100% { transform: translate(0, 0); }
+    }
+
+    .tracking {
+      position: absolute;
+      top: 30%;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: rgba(255, 255, 255, 0.15);
+      z-index: 30;
+      animation: trackingMove 8s linear infinite;
+    }
+
+    @keyframes trackingMove {
+      0% { top: 30%; opacity: 0; }
+      5% { opacity: 0.3; }
+      95% { opacity: 0.3; }
+      100% { top: 70%; opacity: 0; }
+    }
+
+    .glitch-red, .glitch-green, .glitch-blue {
+      position: absolute;
+      left: 0;
+      width: 100%;
+      height: 0;
+      z-index: 45;
+      opacity: 0;
+      mix-blend-mode: screen;
+      overflow: hidden;
+    }
+
+    .glitch-red {
+      background: linear-gradient(90deg, 
+        transparent 0%, 
+        rgba(255, 0, 0, 0.8) 20%, 
+        rgba(255, 0, 100, 0.6) 40%,
+        rgba(255, 50, 0, 0.7) 60%,
+        rgba(255, 0, 50, 0.5) 80%,
+        transparent 100%);
+      animation: glitchRed 11s infinite;
+    }
+
+    .glitch-green {
+      background: linear-gradient(90deg, 
+        transparent 0%, 
+        rgba(0, 255, 0, 0.7) 25%, 
+        rgba(0, 255, 150, 0.6) 45%,
+        rgba(100, 255, 0, 0.8) 65%,
+        rgba(0, 255, 100, 0.5) 85%,
+        transparent 100%);
+      animation: glitchGreen 13s infinite;
+    }
+
+    .glitch-blue {
+      background: linear-gradient(90deg, 
+        transparent 0%, 
+        rgba(0, 100, 255, 0.8) 15%, 
+        rgba(0, 200, 255, 0.7) 35%,
+        rgba(100, 150, 255, 0.6) 55%,
+        rgba(0, 150, 255, 0.7) 75%,
+        rgba(50, 100, 255, 0.5) 90%,
+        transparent 100%);
+      animation: glitchBlue 9s infinite;
+    }
+
+    @keyframes glitchRed {
+      0%, 88%, 100% { 
+        top: -50px; 
+        height: 0; 
+        opacity: 0;
+        transform: translateX(0);
       }
-      50% {
-        filter: contrast(300%) brightness(1000%);
+      88.5% { 
+        top: 30%; 
+        height: 180px; 
+        opacity: 1;
+        transform: translateX(0);
       }
-      100% {
-        filter: contrast(175%) brightness(1000%);
+      89% { 
+        transform: translateX(-40px);
+      }
+      89.5% { 
+        transform: translateX(30px);
+      }
+      90% { 
+        transform: translateX(-20px);
+      }
+      90.5% { 
+        opacity: 0;
+      }
+    }
+
+    @keyframes glitchGreen {
+      0%, 85%, 100% { 
+        top: -50px; 
+        height: 0; 
+        opacity: 0;
+        transform: translateX(0) scaleY(1);
+      }
+      85.5% { 
+        top: 55%; 
+        height: 150px; 
+        opacity: 1;
+        transform: translateX(0) scaleY(1);
+      }
+      86% { 
+        transform: translateX(50px) scaleY(1.2);
+      }
+      86.5% { 
+        transform: translateX(-35px) scaleY(0.8);
+      }
+      87% { 
+        transform: translateX(25px) scaleY(1.1);
+      }
+      87.5% { 
+        opacity: 0;
+      }
+    }
+
+    @keyframes glitchBlue {
+      0%, 91%, 100% { 
+        top: -50px; 
+        height: 0; 
+        opacity: 0;
+        transform: translateX(0);
+      }
+      91.5% { 
+        top: 15%; 
+        height: 200px; 
+        opacity: 1;
+        transform: translateX(0);
+      }
+      92% { 
+        transform: translateX(45px);
+      }
+      92.5% { 
+        transform: translateX(-50px);
+      }
+      93% { 
+        transform: translateX(30px);
+      }
+      93.5% { 
+        transform: translateX(-15px);
+      }
+      94% { 
+        opacity: 0;
+      }
+    }
+
+    .major-glitch {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 48;
+      opacity: 0;
+      animation: majorSplit 19s infinite;
+    }
+
+    @keyframes majorSplit {
+      0%, 94%, 100% { 
+        opacity: 0;
+        filter: none;
+      }
+      94.2% { 
+        opacity: 1;
+        filter: 
+          drop-shadow(3px 0 0 rgba(255, 0, 0, 0.8))
+          drop-shadow(-3px 0 0 rgba(0, 255, 255, 0.8));
+        transform: translateX(0);
+      }
+      94.4% { 
+        filter: 
+          drop-shadow(-5px 0 0 rgba(255, 0, 0, 1))
+          drop-shadow(5px 0 0 rgba(0, 255, 0, 1));
+        transform: translateX(10px);
+      }
+      94.6% { 
+        filter: 
+          drop-shadow(4px 0 0 rgba(0, 0, 255, 0.9))
+          drop-shadow(-4px 0 0 rgba(255, 255, 0, 0.9));
+        transform: translateX(-8px);
+      }
+      94.8% { 
+        opacity: 0;
+        transform: translateX(0);
+      }
+    }
+
+    .test-pattern {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 400px;
+      height: 400px;
+      z-index: 5;
+      pointer-events: none;
+    }
+
+    /* Center bullseye */
+    .test-pattern::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 20px;
+      height: 20px;
+      background: rgba(255, 255, 255, 0.5);
+      border-radius: 50%;
+    }
+
+    /* Concentric circles */
+    .test-circle-1, .test-circle-2, .test-circle-3, .test-circle-4 {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      border: 2px solid rgba(255, 255, 255, 0.35);
+    }
+    .test-circle-1 { width: 80px; height: 80px; }
+    .test-circle-2 { width: 160px; height: 160px; }
+    .test-circle-3 { width: 280px; height: 280px; }
+    .test-circle-4 { width: 400px; height: 400px; }
+
+    /* Crosshairs */
+    .test-crosshair-v {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 2px;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.35);
+      z-index: 5;
+      pointer-events: none;
+    }
+
+    .test-crosshair-h {
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      height: 2px;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.35);
+      z-index: 5;
+      pointer-events: none;
+    }
+
+    /* Corner registration marks */
+    .corner-mark {
+      position: absolute;
+      width: 50px;
+      height: 50px;
+      z-index: 5;
+      pointer-events: none;
+    }
+    .corner-mark::before,
+    .corner-mark::after {
+      content: '';
+      position: absolute;
+      background: rgba(255, 255, 255, 0.4);
+    }
+    .corner-mark::before {
+      width: 3px;
+      height: 100%;
+    }
+    .corner-mark::after {
+      width: 100%;
+      height: 3px;
+    }
+    .corner-tl { top: 8%; left: 8%; }
+    .corner-tl::before { left: 0; }
+    .corner-tl::after { top: 0; }
+    .corner-tr { top: 8%; right: 8%; }
+    .corner-tr::before { right: 0; }
+    .corner-tr::after { top: 0; }
+    .corner-bl { bottom: 8%; left: 8%; }
+    .corner-bl::before { left: 0; }
+    .corner-bl::after { bottom: 0; }
+    .corner-br { bottom: 8%; right: 8%; }
+    .corner-br::before { right: 0; }
+    .corner-br::after { bottom: 0; }
+
+    /* Grid lines */
+    .grid-line {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.15);
+      z-index: 4;
+      pointer-events: none;
+    }
+    .grid-v-1 { left: 25%; top: 0; width: 1px; height: 100%; }
+    .grid-v-2 { left: 75%; top: 0; width: 1px; height: 100%; }
+    .grid-h-1 { top: 25%; left: 0; height: 1px; width: 100%; }
+    .grid-h-2 { top: 75%; left: 0; height: 1px; width: 100%; }
+
+    .vignette {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      box-shadow: inset 0 0 200px rgba(0, 0, 0, 0.5);
+      pointer-events: none;
+      z-index: 35;
+    }
+
+    .color-glow {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      box-shadow: inset 0 0 100px rgba(255, 0, 0, 0.03), inset 0 0 100px rgba(0, 255, 255, 0.03);
+      pointer-events: none;
+      z-index: 20;
+    }
+
+    .vhs-text {
+      position: absolute;
+      top: 80px;
+      left: 30px;
+      color: #fff;
+      font-size: 18px;
+      text-shadow: 2px 0 0 rgba(255, 0, 0, 0.5), -2px 0 0 rgba(0, 255, 255, 0.5);
+      z-index: 25;
+      letter-spacing: 2px;
+      font-family: 'Courier New', monospace;
+    }
+
+    .vhs-timestamp {
+      position: absolute;
+      top: 80px;
+      right: 30px;
+      color: #fff;
+      font-size: 18px;
+      text-shadow: 2px 0 0 rgba(255, 0, 0, 0.5), -2px 0 0 rgba(0, 255, 255, 0.5);
+      z-index: 25;
+      font-weight: bold;
+      font-family: 'Courier New', monospace;
+      letter-spacing: 2px;
+    }
+
+    .vhs-bar {
+      position: absolute;
+      bottom: 30px;
+      left: 30px;
+      width: 200px;
+      height: 30px;
+      display: flex;
+      z-index: 25;
+    }
+
+    .color-bar {
+      flex: 1;
+      opacity: 0.8;
+    }
+
+    .color-bar:nth-child(1) { background: #fff; }
+    .color-bar:nth-child(2) { background: #ff0; }
+    .color-bar:nth-child(3) { background: #0ff; }
+    .color-bar:nth-child(4) { background: #0f0; }
+    .color-bar:nth-child(5) { background: #f0f; }
+    .color-bar:nth-child(6) { background: #f00; }
+    .color-bar:nth-child(7) { background: #00f; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .checker,
+      .scanlines,
+      .noise,
+      .tracking,
+      .glitch-red,
+      .glitch-green,
+      .glitch-blue,
+      .major-glitch {
+        animation: none;
+      }
+      .transition-bars {
+        animation: none;
+        display: none;
       }
     }
   </style>
-  <script>
-    window.addEventListener(
-      "scroll",
-      () => {
-        var h = document.documentElement,
-          b = document.body,
-          st = "scrollTop",
-          sh = "scrollHeight";
-
-        var pos = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight);
-        document.body.style.setProperty("--scroll", pos);
-      },
-      false,
-    );
-  </script>
-  <div></div>
-  <div></div>
-  <div></div>
+  <div class="checkerboard">
+    <div class="checker"></div><div class="checker"></div><div class="checker"></div><div class="checker"></div>
+    <div class="checker"></div><div class="checker"></div><div class="checker"></div><div class="checker"></div>
+    <div class="checker"></div><div class="checker"></div><div class="checker"></div><div class="checker"></div>
+    <div class="checker"></div><div class="checker"></div><div class="checker"></div><div class="checker"></div>
+    <div class="checker"></div><div class="checker"></div><div class="checker"></div><div class="checker"></div>
+    <div class="checker"></div><div class="checker"></div><div class="checker"></div><div class="checker"></div>
+    <div class="checker"></div><div class="checker"></div><div class="checker"></div><div class="checker"></div>
+    <div class="checker"></div><div class="checker"></div><div class="checker"></div><div class="checker"></div>
+    <div class="checker"></div><div class="checker"></div><div class="checker"></div><div class="checker"></div>
+    <div class="checker"></div><div class="checker"></div><div class="checker"></div><div class="checker"></div>
+    <div class="checker"></div><div class="checker"></div><div class="checker"></div><div class="checker"></div>
+    <div class="checker"></div><div class="checker"></div><div class="checker"></div><div class="checker"></div>
+    <div class="checker"></div><div class="checker"></div><div class="checker"></div><div class="checker"></div>
+    <div class="checker"></div><div class="checker"></div><div class="checker"></div><div class="checker"></div>
+    <div class="checker"></div><div class="checker"></div><div class="checker"></div><div class="checker"></div>
+    <div class="checker"></div><div class="checker"></div><div class="checker"></div><div class="checker"></div>
+    <div class="checker"></div><div class="checker"></div><div class="checker"></div><div class="checker"></div>
+    <div class="checker"></div><div class="checker"></div><div class="checker"></div><div class="checker"></div>
+    <div class="checker"></div><div class="checker"></div><div class="checker"></div><div class="checker"></div>
+    <div class="checker"></div><div class="checker"></div><div class="checker"></div><div class="checker"></div>
+    <div class="checker"></div><div class="checker"></div><div class="checker"></div><div class="checker"></div>
+    <div class="checker"></div><div class="checker"></div><div class="checker"></div><div class="checker"></div>
+    <div class="checker"></div><div class="checker"></div><div class="checker"></div><div class="checker"></div>
+    <div class="checker"></div><div class="checker"></div><div class="checker"></div><div class="checker"></div>
+    <div class="checker"></div><div class="checker"></div><div class="checker"></div><div class="checker"></div>
+    <div class="checker"></div><div class="checker"></div><div class="checker"></div><div class="checker"></div>
+    <div class="checker"></div><div class="checker"></div><div class="checker"></div><div class="checker"></div>
+    <div class="checker"></div><div class="checker"></div><div class="checker"></div><div class="checker"></div>
+    <div class="checker"></div><div class="checker"></div><div class="checker"></div><div class="checker"></div>
+    <div class="checker"></div><div class="checker"></div><div class="checker"></div><div class="checker"></div>
+    <div class="checker"></div><div class="checker"></div><div class="checker"></div><div class="checker"></div>
+    <div class="checker"></div><div class="checker"></div><div class="checker"></div><div class="checker"></div>
+    <div class="checker"></div><div class="checker"></div><div class="checker"></div><div class="checker"></div>
+    <div class="checker"></div><div class="checker"></div><div class="checker"></div><div class="checker"></div>
+    <div class="checker"></div><div class="checker"></div><div class="checker"></div><div class="checker"></div>
+    <div class="checker"></div><div class="checker"></div><div class="checker"></div><div class="checker"></div>
+    <div class="checker"></div><div class="checker"></div><div class="checker"></div><div class="checker"></div>
+    <div class="checker"></div><div class="checker"></div><div class="checker"></div><div class="checker"></div>
+    <div class="checker"></div><div class="checker"></div><div class="checker"></div><div class="checker"></div>
+    <div class="checker"></div><div class="checker"></div><div class="checker"></div><div class="checker"></div>
+    <div class="checker"></div><div class="checker"></div><div class="checker"></div><div class="checker"></div>
+    <div class="checker"></div><div class="checker"></div><div class="checker"></div><div class="checker"></div>
+    <div class="checker"></div><div class="checker"></div><div class="checker"></div><div class="checker"></div>
+    <div class="checker"></div><div class="checker"></div><div class="checker"></div><div class="checker"></div>
+    <div class="checker"></div><div class="checker"></div><div class="checker"></div><div class="checker"></div>
+    <div class="checker"></div><div class="checker"></div><div class="checker"></div><div class="checker"></div>
+    <div class="checker"></div><div class="checker"></div><div class="checker"></div><div class="checker"></div>
+    <div class="checker"></div><div class="checker"></div><div class="checker"></div><div class="checker"></div>
+  </div>
+  <div class="scanlines"></div>
+  <div class="noise"></div>
+  <div class="tracking"></div>
+  <div class="glitch-red"></div>
+  <div class="glitch-green"></div>
+  <div class="glitch-blue"></div>
+  <div class="major-glitch"></div>
+  <div class="test-pattern">
+    <div class="test-circle-1"></div>
+    <div class="test-circle-2"></div>
+    <div class="test-circle-3"></div>
+    <div class="test-circle-4"></div>
+    <div class="test-crosshair-v"></div>
+    <div class="test-crosshair-h"></div>
+  </div>
+  <div class="corner-mark corner-tl"></div>
+  <div class="corner-mark corner-tr"></div>
+  <div class="corner-mark corner-bl"></div>
+  <div class="corner-mark corner-br"></div>
+  <div class="grid-line grid-v-1"></div>
+  <div class="grid-line grid-v-2"></div>
+  <div class="grid-line grid-h-1"></div>
+  <div class="grid-line grid-h-2"></div>
+  <div class="vignette"></div>
+  <div class="color-glow"></div>
+  <div class="vhs-text">TEST PATTERN - SMPTE BARS</div>
+  <div class="vhs-timestamp" id="vhs-time">00:00:00</div>
+  <div class="vhs-bar">
+    <div class="color-bar"></div>
+    <div class="color-bar"></div>
+    <div class="color-bar"></div>
+    <div class="color-bar"></div>
+    <div class="color-bar"></div>
+    <div class="color-bar"></div>
+    <div class="color-bar"></div>
+  </div>
 </template>
+<script>
+  (function() {
+    function initClock() {
+      var bg = document.querySelector('dt-background');
+      if (!bg || !bg.shadowRoot) {
+        setTimeout(initClock, 100);
+        return;
+      }
+      var timeEl = bg.shadowRoot.querySelector('.vhs-timestamp');
+      
+      function updateCSTTime() {
+        var now = new Date();
+        var cst = new Date(now.toLocaleString('en-US', { timeZone: 'America/Chicago' }));
+        var h = cst.getHours().toString().padStart(2, '0');
+        var m = cst.getMinutes().toString().padStart(2, '0');
+        var s = cst.getSeconds().toString().padStart(2, '0');
+        if (timeEl) {
+          timeEl.textContent = h + ':' + m + ':' + s;
+        }
+      }
+      updateCSTTime();
+      setInterval(updateCSTTime, 1000);
+    }
+    
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initClock);
+    } else {
+      initClock();
+    }
+  })();
+</script>
