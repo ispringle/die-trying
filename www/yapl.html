@@ -9,6 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Oldenburg&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/assets/style.css">
   <script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/js-beautify@1.14.11/js/lib/beautify.js"></script>
   <style>
     * {
       margin: 0;
@@ -209,364 +210,63 @@
     }
   </style>
   <script>
-// YAPL Transpiler - Browser version
-// Converts YAPL to JavaScript and executes with eval
+(function(){const r=document.createElement("link").relList;if(r&&r.supports&&r.supports("modulepreload"))return;for(const o of document.querySelectorAll('link[rel="modulepreload"]'))t(o);new MutationObserver(o=>{for(const a of o)if(a.type==="childList")for(const l of a.addedNodes)l.tagName==="LINK"&&l.rel==="modulepreload"&&t(l)}).observe(document,{childList:!0,subtree:!0});function n(o){const a={};return o.integrity&&(a.integrity=o.integrity),o.referrerPolicy&&(a.referrerPolicy=o.referrerPolicy),o.crossOrigin==="use-credentials"?a.credentials="include":o.crossOrigin==="anonymous"?a.credentials="omit":a.credentials="same-origin",a}function t(o){if(o.ep)return;o.ep=!0;const a=n(o);fetch(o.href,a)}})();/*! js-yaml 4.1.1 https://github.com/nodeca/js-yaml @license MIT */function isNothing(e){return typeof e>"u"||e===null}function isObject(e){return typeof e=="object"&&e!==null}function toArray(e){return Array.isArray(e)?e:isNothing(e)?[]:[e]}function extend(e,r){var n,t,o,a;if(r)for(a=Object.keys(r),n=0,t=a.length;n<t;n+=1)o=a[n],e[o]=r[o];return e}function repeat(e,r){var n="",t;for(t=0;t<r;t+=1)n+=e;return n}function isNegativeZero(e){return e===0&&Number.NEGATIVE_INFINITY===1/e}var isNothing_1=isNothing,isObject_1=isObject,toArray_1=toArray,repeat_1=repeat,isNegativeZero_1=isNegativeZero,extend_1=extend,common={isNothing:isNothing_1,isObject:isObject_1,toArray:toArray_1,repeat:repeat_1,isNegativeZero:isNegativeZero_1,extend:extend_1};function formatError(e,r){var n="",t=e.reason||"(unknown reason)";return e.mark?(e.mark.name&&(n+='in "'+e.mark.name+'" '),n+="("+(e.mark.line+1)+":"+(e.mark.column+1)+")",!r&&e.mark.snippet&&(n+=`
 
-class YAPLTranspiler {
-  constructor() {
-    this.functions = {};
-    this.globals = {};
-    this.params = {};
-  }
-
-  // Main entry point
-  run(yamlContent) {
-    // Use js-yaml from global scope (loaded via CDN)
-    // The CDN version exposes it as 'jsyaml' (lowercase)
-    const yamlLib = typeof jsyaml !== 'undefined' ? jsyaml : 
-                    (typeof jsYAML !== 'undefined' ? jsYAML : null);
-    
-    if (!yamlLib) {
-      throw new Error('js-yaml library not loaded. Make sure it is included via CDN.');
+`+e.mark.snippet),t+" "+n):t}function YAMLException$1(e,r){Error.call(this),this.name="YAMLException",this.reason=e,this.mark=r,this.message=formatError(this,!1),Error.captureStackTrace?Error.captureStackTrace(this,this.constructor):this.stack=new Error().stack||""}YAMLException$1.prototype=Object.create(Error.prototype);YAMLException$1.prototype.constructor=YAMLException$1;YAMLException$1.prototype.toString=function(r){return this.name+": "+formatError(this,r)};var exception=YAMLException$1;function getLine(e,r,n,t,o){var a="",l="",u=Math.floor(o/2)-1;return t-r>u&&(a=" ... ",r=t-u+a.length),n-t>u&&(l=" ...",n=t+u-l.length),{str:a+e.slice(r,n).replace(/\t/g,"→")+l,pos:t-r+a.length}}function padStart(e,r){return common.repeat(" ",r-e.length)+e}function makeSnippet(e,r){if(r=Object.create(r||null),!e.buffer)return null;r.maxLength||(r.maxLength=79),typeof r.indent!="number"&&(r.indent=1),typeof r.linesBefore!="number"&&(r.linesBefore=3),typeof r.linesAfter!="number"&&(r.linesAfter=2);for(var n=/\r?\n|\r|\0/g,t=[0],o=[],a,l=-1;a=n.exec(e.buffer);)o.push(a.index),t.push(a.index+a[0].length),e.position<=a.index&&l<0&&(l=t.length-2);l<0&&(l=t.length-1);var u="",c,p,f=Math.min(e.line+r.linesAfter,o.length).toString().length,s=r.maxLength-(r.indent+f+3);for(c=1;c<=r.linesBefore&&!(l-c<0);c++)p=getLine(e.buffer,t[l-c],o[l-c],e.position-(t[l]-t[l-c]),s),u=common.repeat(" ",r.indent)+padStart((e.line-c+1).toString(),f)+" | "+p.str+`
+`+u;for(p=getLine(e.buffer,t[l],o[l],e.position,s),u+=common.repeat(" ",r.indent)+padStart((e.line+1).toString(),f)+" | "+p.str+`
+`,u+=common.repeat("-",r.indent+f+3+p.pos)+`^
+`,c=1;c<=r.linesAfter&&!(l+c>=o.length);c++)p=getLine(e.buffer,t[l+c],o[l+c],e.position-(t[l]-t[l+c]),s),u+=common.repeat(" ",r.indent)+padStart((e.line+c+1).toString(),f)+" | "+p.str+`
+`;return u.replace(/\n$/,"")}var snippet=makeSnippet,TYPE_CONSTRUCTOR_OPTIONS=["kind","multi","resolve","construct","instanceOf","predicate","represent","representName","defaultStyle","styleAliases"],YAML_NODE_KINDS=["scalar","sequence","mapping"];function compileStyleAliases(e){var r={};return e!==null&&Object.keys(e).forEach(function(n){e[n].forEach(function(t){r[String(t)]=n})}),r}function Type$1(e,r){if(r=r||{},Object.keys(r).forEach(function(n){if(TYPE_CONSTRUCTOR_OPTIONS.indexOf(n)===-1)throw new exception('Unknown option "'+n+'" is met in definition of "'+e+'" YAML type.')}),this.options=r,this.tag=e,this.kind=r.kind||null,this.resolve=r.resolve||function(){return!0},this.construct=r.construct||function(n){return n},this.instanceOf=r.instanceOf||null,this.predicate=r.predicate||null,this.represent=r.represent||null,this.representName=r.representName||null,this.defaultStyle=r.defaultStyle||null,this.multi=r.multi||!1,this.styleAliases=compileStyleAliases(r.styleAliases||null),YAML_NODE_KINDS.indexOf(this.kind)===-1)throw new exception('Unknown kind "'+this.kind+'" is specified for "'+e+'" YAML type.')}var type=Type$1;function compileList(e,r){var n=[];return e[r].forEach(function(t){var o=n.length;n.forEach(function(a,l){a.tag===t.tag&&a.kind===t.kind&&a.multi===t.multi&&(o=l)}),n[o]=t}),n}function compileMap(){var e={scalar:{},sequence:{},mapping:{},fallback:{},multi:{scalar:[],sequence:[],mapping:[],fallback:[]}},r,n;function t(o){o.multi?(e.multi[o.kind].push(o),e.multi.fallback.push(o)):e[o.kind][o.tag]=e.fallback[o.tag]=o}for(r=0,n=arguments.length;r<n;r+=1)arguments[r].forEach(t);return e}function Schema$1(e){return this.extend(e)}Schema$1.prototype.extend=function(r){var n=[],t=[];if(r instanceof type)t.push(r);else if(Array.isArray(r))t=t.concat(r);else if(r&&(Array.isArray(r.implicit)||Array.isArray(r.explicit)))r.implicit&&(n=n.concat(r.implicit)),r.explicit&&(t=t.concat(r.explicit));else throw new exception("Schema.extend argument should be a Type, [ Type ], or a schema definition ({ implicit: [...], explicit: [...] })");n.forEach(function(a){if(!(a instanceof type))throw new exception("Specified list of YAML types (or a single Type object) contains a non-Type object.");if(a.loadKind&&a.loadKind!=="scalar")throw new exception("There is a non-scalar type in the implicit list of a schema. Implicit resolving of such types is not supported.");if(a.multi)throw new exception("There is a multi type in the implicit list of a schema. Multi tags can only be listed as explicit.")}),t.forEach(function(a){if(!(a instanceof type))throw new exception("Specified list of YAML types (or a single Type object) contains a non-Type object.")});var o=Object.create(Schema$1.prototype);return o.implicit=(this.implicit||[]).concat(n),o.explicit=(this.explicit||[]).concat(t),o.compiledImplicit=compileList(o,"implicit"),o.compiledExplicit=compileList(o,"explicit"),o.compiledTypeMap=compileMap(o.compiledImplicit,o.compiledExplicit),o};var schema=Schema$1,str=new type("tag:yaml.org,2002:str",{kind:"scalar",construct:function(e){return e!==null?e:""}}),seq=new type("tag:yaml.org,2002:seq",{kind:"sequence",construct:function(e){return e!==null?e:[]}}),map=new type("tag:yaml.org,2002:map",{kind:"mapping",construct:function(e){return e!==null?e:{}}}),failsafe=new schema({explicit:[str,seq,map]});function resolveYamlNull(e){if(e===null)return!0;var r=e.length;return r===1&&e==="~"||r===4&&(e==="null"||e==="Null"||e==="NULL")}function constructYamlNull(){return null}function isNull(e){return e===null}var _null=new type("tag:yaml.org,2002:null",{kind:"scalar",resolve:resolveYamlNull,construct:constructYamlNull,predicate:isNull,represent:{canonical:function(){return"~"},lowercase:function(){return"null"},uppercase:function(){return"NULL"},camelcase:function(){return"Null"},empty:function(){return""}},defaultStyle:"lowercase"});function resolveYamlBoolean(e){if(e===null)return!1;var r=e.length;return r===4&&(e==="true"||e==="True"||e==="TRUE")||r===5&&(e==="false"||e==="False"||e==="FALSE")}function constructYamlBoolean(e){return e==="true"||e==="True"||e==="TRUE"}function isBoolean(e){return Object.prototype.toString.call(e)==="[object Boolean]"}var bool=new type("tag:yaml.org,2002:bool",{kind:"scalar",resolve:resolveYamlBoolean,construct:constructYamlBoolean,predicate:isBoolean,represent:{lowercase:function(e){return e?"true":"false"},uppercase:function(e){return e?"TRUE":"FALSE"},camelcase:function(e){return e?"True":"False"}},defaultStyle:"lowercase"});function isHexCode(e){return 48<=e&&e<=57||65<=e&&e<=70||97<=e&&e<=102}function isOctCode(e){return 48<=e&&e<=55}function isDecCode(e){return 48<=e&&e<=57}function resolveYamlInteger(e){if(e===null)return!1;var r=e.length,n=0,t=!1,o;if(!r)return!1;if(o=e[n],(o==="-"||o==="+")&&(o=e[++n]),o==="0"){if(n+1===r)return!0;if(o=e[++n],o==="b"){for(n++;n<r;n++)if(o=e[n],o!=="_"){if(o!=="0"&&o!=="1")return!1;t=!0}return t&&o!=="_"}if(o==="x"){for(n++;n<r;n++)if(o=e[n],o!=="_"){if(!isHexCode(e.charCodeAt(n)))return!1;t=!0}return t&&o!=="_"}if(o==="o"){for(n++;n<r;n++)if(o=e[n],o!=="_"){if(!isOctCode(e.charCodeAt(n)))return!1;t=!0}return t&&o!=="_"}}if(o==="_")return!1;for(;n<r;n++)if(o=e[n],o!=="_"){if(!isDecCode(e.charCodeAt(n)))return!1;t=!0}return!(!t||o==="_")}function constructYamlInteger(e){var r=e,n=1,t;if(r.indexOf("_")!==-1&&(r=r.replace(/_/g,"")),t=r[0],(t==="-"||t==="+")&&(t==="-"&&(n=-1),r=r.slice(1),t=r[0]),r==="0")return 0;if(t==="0"){if(r[1]==="b")return n*parseInt(r.slice(2),2);if(r[1]==="x")return n*parseInt(r.slice(2),16);if(r[1]==="o")return n*parseInt(r.slice(2),8)}return n*parseInt(r,10)}function isInteger(e){return Object.prototype.toString.call(e)==="[object Number]"&&e%1===0&&!common.isNegativeZero(e)}var int=new type("tag:yaml.org,2002:int",{kind:"scalar",resolve:resolveYamlInteger,construct:constructYamlInteger,predicate:isInteger,represent:{binary:function(e){return e>=0?"0b"+e.toString(2):"-0b"+e.toString(2).slice(1)},octal:function(e){return e>=0?"0o"+e.toString(8):"-0o"+e.toString(8).slice(1)},decimal:function(e){return e.toString(10)},hexadecimal:function(e){return e>=0?"0x"+e.toString(16).toUpperCase():"-0x"+e.toString(16).toUpperCase().slice(1)}},defaultStyle:"decimal",styleAliases:{binary:[2,"bin"],octal:[8,"oct"],decimal:[10,"dec"],hexadecimal:[16,"hex"]}}),YAML_FLOAT_PATTERN=new RegExp("^(?:[-+]?(?:[0-9][0-9_]*)(?:\\.[0-9_]*)?(?:[eE][-+]?[0-9]+)?|\\.[0-9_]+(?:[eE][-+]?[0-9]+)?|[-+]?\\.(?:inf|Inf|INF)|\\.(?:nan|NaN|NAN))$");function resolveYamlFloat(e){return!(e===null||!YAML_FLOAT_PATTERN.test(e)||e[e.length-1]==="_")}function constructYamlFloat(e){var r,n;return r=e.replace(/_/g,"").toLowerCase(),n=r[0]==="-"?-1:1,"+-".indexOf(r[0])>=0&&(r=r.slice(1)),r===".inf"?n===1?Number.POSITIVE_INFINITY:Number.NEGATIVE_INFINITY:r===".nan"?NaN:n*parseFloat(r,10)}var SCIENTIFIC_WITHOUT_DOT=/^[-+]?[0-9]+e/;function representYamlFloat(e,r){var n;if(isNaN(e))switch(r){case"lowercase":return".nan";case"uppercase":return".NAN";case"camelcase":return".NaN"}else if(Number.POSITIVE_INFINITY===e)switch(r){case"lowercase":return".inf";case"uppercase":return".INF";case"camelcase":return".Inf"}else if(Number.NEGATIVE_INFINITY===e)switch(r){case"lowercase":return"-.inf";case"uppercase":return"-.INF";case"camelcase":return"-.Inf"}else if(common.isNegativeZero(e))return"-0.0";return n=e.toString(10),SCIENTIFIC_WITHOUT_DOT.test(n)?n.replace("e",".e"):n}function isFloat(e){return Object.prototype.toString.call(e)==="[object Number]"&&(e%1!==0||common.isNegativeZero(e))}var float=new type("tag:yaml.org,2002:float",{kind:"scalar",resolve:resolveYamlFloat,construct:constructYamlFloat,predicate:isFloat,represent:representYamlFloat,defaultStyle:"lowercase"}),json=failsafe.extend({implicit:[_null,bool,int,float]}),core=json,YAML_DATE_REGEXP=new RegExp("^([0-9][0-9][0-9][0-9])-([0-9][0-9])-([0-9][0-9])$"),YAML_TIMESTAMP_REGEXP=new RegExp("^([0-9][0-9][0-9][0-9])-([0-9][0-9]?)-([0-9][0-9]?)(?:[Tt]|[ \\t]+)([0-9][0-9]?):([0-9][0-9]):([0-9][0-9])(?:\\.([0-9]*))?(?:[ \\t]*(Z|([-+])([0-9][0-9]?)(?::([0-9][0-9]))?))?$");function resolveYamlTimestamp(e){return e===null?!1:YAML_DATE_REGEXP.exec(e)!==null||YAML_TIMESTAMP_REGEXP.exec(e)!==null}function constructYamlTimestamp(e){var r,n,t,o,a,l,u,c=0,p=null,f,s,h;if(r=YAML_DATE_REGEXP.exec(e),r===null&&(r=YAML_TIMESTAMP_REGEXP.exec(e)),r===null)throw new Error("Date resolve error");if(n=+r[1],t=+r[2]-1,o=+r[3],!r[4])return new Date(Date.UTC(n,t,o));if(a=+r[4],l=+r[5],u=+r[6],r[7]){for(c=r[7].slice(0,3);c.length<3;)c+="0";c=+c}return r[9]&&(f=+r[10],s=+(r[11]||0),p=(f*60+s)*6e4,r[9]==="-"&&(p=-p)),h=new Date(Date.UTC(n,t,o,a,l,u,c)),p&&h.setTime(h.getTime()-p),h}function representYamlTimestamp(e){return e.toISOString()}var timestamp=new type("tag:yaml.org,2002:timestamp",{kind:"scalar",resolve:resolveYamlTimestamp,construct:constructYamlTimestamp,instanceOf:Date,represent:representYamlTimestamp});function resolveYamlMerge(e){return e==="<<"||e===null}var merge=new type("tag:yaml.org,2002:merge",{kind:"scalar",resolve:resolveYamlMerge}),BASE64_MAP=`ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=
+\r`;function resolveYamlBinary(e){if(e===null)return!1;var r,n,t=0,o=e.length,a=BASE64_MAP;for(n=0;n<o;n++)if(r=a.indexOf(e.charAt(n)),!(r>64)){if(r<0)return!1;t+=6}return t%8===0}function constructYamlBinary(e){var r,n,t=e.replace(/[\r\n=]/g,""),o=t.length,a=BASE64_MAP,l=0,u=[];for(r=0;r<o;r++)r%4===0&&r&&(u.push(l>>16&255),u.push(l>>8&255),u.push(l&255)),l=l<<6|a.indexOf(t.charAt(r));return n=o%4*6,n===0?(u.push(l>>16&255),u.push(l>>8&255),u.push(l&255)):n===18?(u.push(l>>10&255),u.push(l>>2&255)):n===12&&u.push(l>>4&255),new Uint8Array(u)}function representYamlBinary(e){var r="",n=0,t,o,a=e.length,l=BASE64_MAP;for(t=0;t<a;t++)t%3===0&&t&&(r+=l[n>>18&63],r+=l[n>>12&63],r+=l[n>>6&63],r+=l[n&63]),n=(n<<8)+e[t];return o=a%3,o===0?(r+=l[n>>18&63],r+=l[n>>12&63],r+=l[n>>6&63],r+=l[n&63]):o===2?(r+=l[n>>10&63],r+=l[n>>4&63],r+=l[n<<2&63],r+=l[64]):o===1&&(r+=l[n>>2&63],r+=l[n<<4&63],r+=l[64],r+=l[64]),r}function isBinary(e){return Object.prototype.toString.call(e)==="[object Uint8Array]"}var binary=new type("tag:yaml.org,2002:binary",{kind:"scalar",resolve:resolveYamlBinary,construct:constructYamlBinary,predicate:isBinary,represent:representYamlBinary}),_hasOwnProperty$3=Object.prototype.hasOwnProperty,_toString$2=Object.prototype.toString;function resolveYamlOmap(e){if(e===null)return!0;var r=[],n,t,o,a,l,u=e;for(n=0,t=u.length;n<t;n+=1){if(o=u[n],l=!1,_toString$2.call(o)!=="[object Object]")return!1;for(a in o)if(_hasOwnProperty$3.call(o,a))if(!l)l=!0;else return!1;if(!l)return!1;if(r.indexOf(a)===-1)r.push(a);else return!1}return!0}function constructYamlOmap(e){return e!==null?e:[]}var omap=new type("tag:yaml.org,2002:omap",{kind:"sequence",resolve:resolveYamlOmap,construct:constructYamlOmap}),_toString$1=Object.prototype.toString;function resolveYamlPairs(e){if(e===null)return!0;var r,n,t,o,a,l=e;for(a=new Array(l.length),r=0,n=l.length;r<n;r+=1){if(t=l[r],_toString$1.call(t)!=="[object Object]"||(o=Object.keys(t),o.length!==1))return!1;a[r]=[o[0],t[o[0]]]}return!0}function constructYamlPairs(e){if(e===null)return[];var r,n,t,o,a,l=e;for(a=new Array(l.length),r=0,n=l.length;r<n;r+=1)t=l[r],o=Object.keys(t),a[r]=[o[0],t[o[0]]];return a}var pairs=new type("tag:yaml.org,2002:pairs",{kind:"sequence",resolve:resolveYamlPairs,construct:constructYamlPairs}),_hasOwnProperty$2=Object.prototype.hasOwnProperty;function resolveYamlSet(e){if(e===null)return!0;var r,n=e;for(r in n)if(_hasOwnProperty$2.call(n,r)&&n[r]!==null)return!1;return!0}function constructYamlSet(e){return e!==null?e:{}}var set=new type("tag:yaml.org,2002:set",{kind:"mapping",resolve:resolveYamlSet,construct:constructYamlSet}),_default=core.extend({implicit:[timestamp,merge],explicit:[binary,omap,pairs,set]}),_hasOwnProperty$1=Object.prototype.hasOwnProperty,CONTEXT_FLOW_IN=1,CONTEXT_FLOW_OUT=2,CONTEXT_BLOCK_IN=3,CONTEXT_BLOCK_OUT=4,CHOMPING_CLIP=1,CHOMPING_STRIP=2,CHOMPING_KEEP=3,PATTERN_NON_PRINTABLE=/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F-\x84\x86-\x9F\uFFFE\uFFFF]|[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?:[^\uD800-\uDBFF]|^)[\uDC00-\uDFFF]/,PATTERN_NON_ASCII_LINE_BREAKS=/[\x85\u2028\u2029]/,PATTERN_FLOW_INDICATORS=/[,\[\]\{\}]/,PATTERN_TAG_HANDLE=/^(?:!|!!|![a-z\-]+!)$/i,PATTERN_TAG_URI=/^(?:!|[^,\[\]\{\}])(?:%[0-9a-f]{2}|[0-9a-z\-#;\/\?:@&=\+\$,_\.!~\*'\(\)\[\]])*$/i;function _class(e){return Object.prototype.toString.call(e)}function is_EOL(e){return e===10||e===13}function is_WHITE_SPACE(e){return e===9||e===32}function is_WS_OR_EOL(e){return e===9||e===32||e===10||e===13}function is_FLOW_INDICATOR(e){return e===44||e===91||e===93||e===123||e===125}function fromHexCode(e){var r;return 48<=e&&e<=57?e-48:(r=e|32,97<=r&&r<=102?r-97+10:-1)}function escapedHexLen(e){return e===120?2:e===117?4:e===85?8:0}function fromDecimalCode(e){return 48<=e&&e<=57?e-48:-1}function simpleEscapeSequence(e){return e===48?"\0":e===97?"\x07":e===98?"\b":e===116||e===9?"	":e===110?`
+`:e===118?"\v":e===102?"\f":e===114?"\r":e===101?"\x1B":e===32?" ":e===34?'"':e===47?"/":e===92?"\\":e===78?"":e===95?" ":e===76?"\u2028":e===80?"\u2029":""}function charFromCodepoint(e){return e<=65535?String.fromCharCode(e):String.fromCharCode((e-65536>>10)+55296,(e-65536&1023)+56320)}function setProperty(e,r,n){r==="__proto__"?Object.defineProperty(e,r,{configurable:!0,enumerable:!0,writable:!0,value:n}):e[r]=n}var simpleEscapeCheck=new Array(256),simpleEscapeMap=new Array(256);for(var i=0;i<256;i++)simpleEscapeCheck[i]=simpleEscapeSequence(i)?1:0,simpleEscapeMap[i]=simpleEscapeSequence(i);function State$1(e,r){this.input=e,this.filename=r.filename||null,this.schema=r.schema||_default,this.onWarning=r.onWarning||null,this.legacy=r.legacy||!1,this.json=r.json||!1,this.listener=r.listener||null,this.implicitTypes=this.schema.compiledImplicit,this.typeMap=this.schema.compiledTypeMap,this.length=e.length,this.position=0,this.line=0,this.lineStart=0,this.lineIndent=0,this.firstTabInLine=-1,this.documents=[]}function generateError(e,r){var n={name:e.filename,buffer:e.input.slice(0,-1),position:e.position,line:e.line,column:e.position-e.lineStart};return n.snippet=snippet(n),new exception(r,n)}function throwError(e,r){throw generateError(e,r)}function throwWarning(e,r){e.onWarning&&e.onWarning.call(null,generateError(e,r))}var directiveHandlers={YAML:function(r,n,t){var o,a,l;r.version!==null&&throwError(r,"duplication of %YAML directive"),t.length!==1&&throwError(r,"YAML directive accepts exactly one argument"),o=/^([0-9]+)\.([0-9]+)$/.exec(t[0]),o===null&&throwError(r,"ill-formed argument of the YAML directive"),a=parseInt(o[1],10),l=parseInt(o[2],10),a!==1&&throwError(r,"unacceptable YAML version of the document"),r.version=t[0],r.checkLineBreaks=l<2,l!==1&&l!==2&&throwWarning(r,"unsupported YAML version of the document")},TAG:function(r,n,t){var o,a;t.length!==2&&throwError(r,"TAG directive accepts exactly two arguments"),o=t[0],a=t[1],PATTERN_TAG_HANDLE.test(o)||throwError(r,"ill-formed tag handle (first argument) of the TAG directive"),_hasOwnProperty$1.call(r.tagMap,o)&&throwError(r,'there is a previously declared suffix for "'+o+'" tag handle'),PATTERN_TAG_URI.test(a)||throwError(r,"ill-formed tag prefix (second argument) of the TAG directive");try{a=decodeURIComponent(a)}catch{throwError(r,"tag prefix is malformed: "+a)}r.tagMap[o]=a}};function captureSegment(e,r,n,t){var o,a,l,u;if(r<n){if(u=e.input.slice(r,n),t)for(o=0,a=u.length;o<a;o+=1)l=u.charCodeAt(o),l===9||32<=l&&l<=1114111||throwError(e,"expected valid JSON character");else PATTERN_NON_PRINTABLE.test(u)&&throwError(e,"the stream contains non-printable characters");e.result+=u}}function mergeMappings(e,r,n,t){var o,a,l,u;for(common.isObject(n)||throwError(e,"cannot merge mappings; the provided source object is unacceptable"),o=Object.keys(n),l=0,u=o.length;l<u;l+=1)a=o[l],_hasOwnProperty$1.call(r,a)||(setProperty(r,a,n[a]),t[a]=!0)}function storeMappingPair(e,r,n,t,o,a,l,u,c){var p,f;if(Array.isArray(o))for(o=Array.prototype.slice.call(o),p=0,f=o.length;p<f;p+=1)Array.isArray(o[p])&&throwError(e,"nested arrays are not supported inside keys"),typeof o=="object"&&_class(o[p])==="[object Object]"&&(o[p]="[object Object]");if(typeof o=="object"&&_class(o)==="[object Object]"&&(o="[object Object]"),o=String(o),r===null&&(r={}),t==="tag:yaml.org,2002:merge")if(Array.isArray(a))for(p=0,f=a.length;p<f;p+=1)mergeMappings(e,r,a[p],n);else mergeMappings(e,r,a,n);else!e.json&&!_hasOwnProperty$1.call(n,o)&&_hasOwnProperty$1.call(r,o)&&(e.line=l||e.line,e.lineStart=u||e.lineStart,e.position=c||e.position,throwError(e,"duplicated mapping key")),setProperty(r,o,a),delete n[o];return r}function readLineBreak(e){var r;r=e.input.charCodeAt(e.position),r===10?e.position++:r===13?(e.position++,e.input.charCodeAt(e.position)===10&&e.position++):throwError(e,"a line break is expected"),e.line+=1,e.lineStart=e.position,e.firstTabInLine=-1}function skipSeparationSpace(e,r,n){for(var t=0,o=e.input.charCodeAt(e.position);o!==0;){for(;is_WHITE_SPACE(o);)o===9&&e.firstTabInLine===-1&&(e.firstTabInLine=e.position),o=e.input.charCodeAt(++e.position);if(r&&o===35)do o=e.input.charCodeAt(++e.position);while(o!==10&&o!==13&&o!==0);if(is_EOL(o))for(readLineBreak(e),o=e.input.charCodeAt(e.position),t++,e.lineIndent=0;o===32;)e.lineIndent++,o=e.input.charCodeAt(++e.position);else break}return n!==-1&&t!==0&&e.lineIndent<n&&throwWarning(e,"deficient indentation"),t}function testDocumentSeparator(e){var r=e.position,n;return n=e.input.charCodeAt(r),!!((n===45||n===46)&&n===e.input.charCodeAt(r+1)&&n===e.input.charCodeAt(r+2)&&(r+=3,n=e.input.charCodeAt(r),n===0||is_WS_OR_EOL(n)))}function writeFoldedLines(e,r){r===1?e.result+=" ":r>1&&(e.result+=common.repeat(`
+`,r-1))}function readPlainScalar(e,r,n){var t,o,a,l,u,c,p,f,s=e.kind,h=e.result,d;if(d=e.input.charCodeAt(e.position),is_WS_OR_EOL(d)||is_FLOW_INDICATOR(d)||d===35||d===38||d===42||d===33||d===124||d===62||d===39||d===34||d===37||d===64||d===96||(d===63||d===45)&&(o=e.input.charCodeAt(e.position+1),is_WS_OR_EOL(o)||n&&is_FLOW_INDICATOR(o)))return!1;for(e.kind="scalar",e.result="",a=l=e.position,u=!1;d!==0;){if(d===58){if(o=e.input.charCodeAt(e.position+1),is_WS_OR_EOL(o)||n&&is_FLOW_INDICATOR(o))break}else if(d===35){if(t=e.input.charCodeAt(e.position-1),is_WS_OR_EOL(t))break}else{if(e.position===e.lineStart&&testDocumentSeparator(e)||n&&is_FLOW_INDICATOR(d))break;if(is_EOL(d))if(c=e.line,p=e.lineStart,f=e.lineIndent,skipSeparationSpace(e,!1,-1),e.lineIndent>=r){u=!0,d=e.input.charCodeAt(e.position);continue}else{e.position=l,e.line=c,e.lineStart=p,e.lineIndent=f;break}}u&&(captureSegment(e,a,l,!1),writeFoldedLines(e,e.line-c),a=l=e.position,u=!1),is_WHITE_SPACE(d)||(l=e.position+1),d=e.input.charCodeAt(++e.position)}return captureSegment(e,a,l,!1),e.result?!0:(e.kind=s,e.result=h,!1)}function readSingleQuotedScalar(e,r){var n,t,o;if(n=e.input.charCodeAt(e.position),n!==39)return!1;for(e.kind="scalar",e.result="",e.position++,t=o=e.position;(n=e.input.charCodeAt(e.position))!==0;)if(n===39)if(captureSegment(e,t,e.position,!0),n=e.input.charCodeAt(++e.position),n===39)t=e.position,e.position++,o=e.position;else return!0;else is_EOL(n)?(captureSegment(e,t,o,!0),writeFoldedLines(e,skipSeparationSpace(e,!1,r)),t=o=e.position):e.position===e.lineStart&&testDocumentSeparator(e)?throwError(e,"unexpected end of the document within a single quoted scalar"):(e.position++,o=e.position);throwError(e,"unexpected end of the stream within a single quoted scalar")}function readDoubleQuotedScalar(e,r){var n,t,o,a,l,u;if(u=e.input.charCodeAt(e.position),u!==34)return!1;for(e.kind="scalar",e.result="",e.position++,n=t=e.position;(u=e.input.charCodeAt(e.position))!==0;){if(u===34)return captureSegment(e,n,e.position,!0),e.position++,!0;if(u===92){if(captureSegment(e,n,e.position,!0),u=e.input.charCodeAt(++e.position),is_EOL(u))skipSeparationSpace(e,!1,r);else if(u<256&&simpleEscapeCheck[u])e.result+=simpleEscapeMap[u],e.position++;else if((l=escapedHexLen(u))>0){for(o=l,a=0;o>0;o--)u=e.input.charCodeAt(++e.position),(l=fromHexCode(u))>=0?a=(a<<4)+l:throwError(e,"expected hexadecimal character");e.result+=charFromCodepoint(a),e.position++}else throwError(e,"unknown escape sequence");n=t=e.position}else is_EOL(u)?(captureSegment(e,n,t,!0),writeFoldedLines(e,skipSeparationSpace(e,!1,r)),n=t=e.position):e.position===e.lineStart&&testDocumentSeparator(e)?throwError(e,"unexpected end of the document within a double quoted scalar"):(e.position++,t=e.position)}throwError(e,"unexpected end of the stream within a double quoted scalar")}function readFlowCollection(e,r){var n=!0,t,o,a,l=e.tag,u,c=e.anchor,p,f,s,h,d,m=Object.create(null),_,g,S,E;if(E=e.input.charCodeAt(e.position),E===91)f=93,d=!1,u=[];else if(E===123)f=125,d=!0,u={};else return!1;for(e.anchor!==null&&(e.anchorMap[e.anchor]=u),E=e.input.charCodeAt(++e.position);E!==0;){if(skipSeparationSpace(e,!0,r),E=e.input.charCodeAt(e.position),E===f)return e.position++,e.tag=l,e.anchor=c,e.kind=d?"mapping":"sequence",e.result=u,!0;n?E===44&&throwError(e,"expected the node content, but found ','"):throwError(e,"missed comma between flow collection entries"),g=_=S=null,s=h=!1,E===63&&(p=e.input.charCodeAt(e.position+1),is_WS_OR_EOL(p)&&(s=h=!0,e.position++,skipSeparationSpace(e,!0,r))),t=e.line,o=e.lineStart,a=e.position,composeNode(e,r,CONTEXT_FLOW_IN,!1,!0),g=e.tag,_=e.result,skipSeparationSpace(e,!0,r),E=e.input.charCodeAt(e.position),(h||e.line===t)&&E===58&&(s=!0,E=e.input.charCodeAt(++e.position),skipSeparationSpace(e,!0,r),composeNode(e,r,CONTEXT_FLOW_IN,!1,!0),S=e.result),d?storeMappingPair(e,u,m,g,_,S,t,o,a):s?u.push(storeMappingPair(e,null,m,g,_,S,t,o,a)):u.push(_),skipSeparationSpace(e,!0,r),E=e.input.charCodeAt(e.position),E===44?(n=!0,E=e.input.charCodeAt(++e.position)):n=!1}throwError(e,"unexpected end of the stream within a flow collection")}function readBlockScalar(e,r){var n,t,o=CHOMPING_CLIP,a=!1,l=!1,u=r,c=0,p=!1,f,s;if(s=e.input.charCodeAt(e.position),s===124)t=!1;else if(s===62)t=!0;else return!1;for(e.kind="scalar",e.result="";s!==0;)if(s=e.input.charCodeAt(++e.position),s===43||s===45)CHOMPING_CLIP===o?o=s===43?CHOMPING_KEEP:CHOMPING_STRIP:throwError(e,"repeat of a chomping mode identifier");else if((f=fromDecimalCode(s))>=0)f===0?throwError(e,"bad explicit indentation width of a block scalar; it cannot be less than one"):l?throwError(e,"repeat of an indentation width identifier"):(u=r+f-1,l=!0);else break;if(is_WHITE_SPACE(s)){do s=e.input.charCodeAt(++e.position);while(is_WHITE_SPACE(s));if(s===35)do s=e.input.charCodeAt(++e.position);while(!is_EOL(s)&&s!==0)}for(;s!==0;){for(readLineBreak(e),e.lineIndent=0,s=e.input.charCodeAt(e.position);(!l||e.lineIndent<u)&&s===32;)e.lineIndent++,s=e.input.charCodeAt(++e.position);if(!l&&e.lineIndent>u&&(u=e.lineIndent),is_EOL(s)){c++;continue}if(e.lineIndent<u){o===CHOMPING_KEEP?e.result+=common.repeat(`
+`,a?1+c:c):o===CHOMPING_CLIP&&a&&(e.result+=`
+`);break}for(t?is_WHITE_SPACE(s)?(p=!0,e.result+=common.repeat(`
+`,a?1+c:c)):p?(p=!1,e.result+=common.repeat(`
+`,c+1)):c===0?a&&(e.result+=" "):e.result+=common.repeat(`
+`,c):e.result+=common.repeat(`
+`,a?1+c:c),a=!0,l=!0,c=0,n=e.position;!is_EOL(s)&&s!==0;)s=e.input.charCodeAt(++e.position);captureSegment(e,n,e.position,!1)}return!0}function readBlockSequence(e,r){var n,t=e.tag,o=e.anchor,a=[],l,u=!1,c;if(e.firstTabInLine!==-1)return!1;for(e.anchor!==null&&(e.anchorMap[e.anchor]=a),c=e.input.charCodeAt(e.position);c!==0&&(e.firstTabInLine!==-1&&(e.position=e.firstTabInLine,throwError(e,"tab characters must not be used in indentation")),!(c!==45||(l=e.input.charCodeAt(e.position+1),!is_WS_OR_EOL(l))));){if(u=!0,e.position++,skipSeparationSpace(e,!0,-1)&&e.lineIndent<=r){a.push(null),c=e.input.charCodeAt(e.position);continue}if(n=e.line,composeNode(e,r,CONTEXT_BLOCK_IN,!1,!0),a.push(e.result),skipSeparationSpace(e,!0,-1),c=e.input.charCodeAt(e.position),(e.line===n||e.lineIndent>r)&&c!==0)throwError(e,"bad indentation of a sequence entry");else if(e.lineIndent<r)break}return u?(e.tag=t,e.anchor=o,e.kind="sequence",e.result=a,!0):!1}function readBlockMapping(e,r,n){var t,o,a,l,u,c,p=e.tag,f=e.anchor,s={},h=Object.create(null),d=null,m=null,_=null,g=!1,S=!1,E;if(e.firstTabInLine!==-1)return!1;for(e.anchor!==null&&(e.anchorMap[e.anchor]=s),E=e.input.charCodeAt(e.position);E!==0;){if(!g&&e.firstTabInLine!==-1&&(e.position=e.firstTabInLine,throwError(e,"tab characters must not be used in indentation")),t=e.input.charCodeAt(e.position+1),a=e.line,(E===63||E===58)&&is_WS_OR_EOL(t))E===63?(g&&(storeMappingPair(e,s,h,d,m,null,l,u,c),d=m=_=null),S=!0,g=!0,o=!0):g?(g=!1,o=!0):throwError(e,"incomplete explicit mapping pair; a key node is missed; or followed by a non-tabulated empty line"),e.position+=1,E=t;else{if(l=e.line,u=e.lineStart,c=e.position,!composeNode(e,n,CONTEXT_FLOW_OUT,!1,!0))break;if(e.line===a){for(E=e.input.charCodeAt(e.position);is_WHITE_SPACE(E);)E=e.input.charCodeAt(++e.position);if(E===58)E=e.input.charCodeAt(++e.position),is_WS_OR_EOL(E)||throwError(e,"a whitespace character is expected after the key-value separator within a block mapping"),g&&(storeMappingPair(e,s,h,d,m,null,l,u,c),d=m=_=null),S=!0,g=!1,o=!1,d=e.tag,m=e.result;else if(S)throwError(e,"can not read an implicit mapping pair; a colon is missed");else return e.tag=p,e.anchor=f,!0}else if(S)throwError(e,"can not read a block mapping entry; a multiline key may not be an implicit key");else return e.tag=p,e.anchor=f,!0}if((e.line===a||e.lineIndent>r)&&(g&&(l=e.line,u=e.lineStart,c=e.position),composeNode(e,r,CONTEXT_BLOCK_OUT,!0,o)&&(g?m=e.result:_=e.result),g||(storeMappingPair(e,s,h,d,m,_,l,u,c),d=m=_=null),skipSeparationSpace(e,!0,-1),E=e.input.charCodeAt(e.position)),(e.line===a||e.lineIndent>r)&&E!==0)throwError(e,"bad indentation of a mapping entry");else if(e.lineIndent<r)break}return g&&storeMappingPair(e,s,h,d,m,null,l,u,c),S&&(e.tag=p,e.anchor=f,e.kind="mapping",e.result=s),S}function readTagProperty(e){var r,n=!1,t=!1,o,a,l;if(l=e.input.charCodeAt(e.position),l!==33)return!1;if(e.tag!==null&&throwError(e,"duplication of a tag property"),l=e.input.charCodeAt(++e.position),l===60?(n=!0,l=e.input.charCodeAt(++e.position)):l===33?(t=!0,o="!!",l=e.input.charCodeAt(++e.position)):o="!",r=e.position,n){do l=e.input.charCodeAt(++e.position);while(l!==0&&l!==62);e.position<e.length?(a=e.input.slice(r,e.position),l=e.input.charCodeAt(++e.position)):throwError(e,"unexpected end of the stream within a verbatim tag")}else{for(;l!==0&&!is_WS_OR_EOL(l);)l===33&&(t?throwError(e,"tag suffix cannot contain exclamation marks"):(o=e.input.slice(r-1,e.position+1),PATTERN_TAG_HANDLE.test(o)||throwError(e,"named tag handle cannot contain such characters"),t=!0,r=e.position+1)),l=e.input.charCodeAt(++e.position);a=e.input.slice(r,e.position),PATTERN_FLOW_INDICATORS.test(a)&&throwError(e,"tag suffix cannot contain flow indicator characters")}a&&!PATTERN_TAG_URI.test(a)&&throwError(e,"tag name cannot contain such characters: "+a);try{a=decodeURIComponent(a)}catch{throwError(e,"tag name is malformed: "+a)}return n?e.tag=a:_hasOwnProperty$1.call(e.tagMap,o)?e.tag=e.tagMap[o]+a:o==="!"?e.tag="!"+a:o==="!!"?e.tag="tag:yaml.org,2002:"+a:throwError(e,'undeclared tag handle "'+o+'"'),!0}function readAnchorProperty(e){var r,n;if(n=e.input.charCodeAt(e.position),n!==38)return!1;for(e.anchor!==null&&throwError(e,"duplication of an anchor property"),n=e.input.charCodeAt(++e.position),r=e.position;n!==0&&!is_WS_OR_EOL(n)&&!is_FLOW_INDICATOR(n);)n=e.input.charCodeAt(++e.position);return e.position===r&&throwError(e,"name of an anchor node must contain at least one character"),e.anchor=e.input.slice(r,e.position),!0}function readAlias(e){var r,n,t;if(t=e.input.charCodeAt(e.position),t!==42)return!1;for(t=e.input.charCodeAt(++e.position),r=e.position;t!==0&&!is_WS_OR_EOL(t)&&!is_FLOW_INDICATOR(t);)t=e.input.charCodeAt(++e.position);return e.position===r&&throwError(e,"name of an alias node must contain at least one character"),n=e.input.slice(r,e.position),_hasOwnProperty$1.call(e.anchorMap,n)||throwError(e,'unidentified alias "'+n+'"'),e.result=e.anchorMap[n],skipSeparationSpace(e,!0,-1),!0}function composeNode(e,r,n,t,o){var a,l,u,c=1,p=!1,f=!1,s,h,d,m,_,g;if(e.listener!==null&&e.listener("open",e),e.tag=null,e.anchor=null,e.kind=null,e.result=null,a=l=u=CONTEXT_BLOCK_OUT===n||CONTEXT_BLOCK_IN===n,t&&skipSeparationSpace(e,!0,-1)&&(p=!0,e.lineIndent>r?c=1:e.lineIndent===r?c=0:e.lineIndent<r&&(c=-1)),c===1)for(;readTagProperty(e)||readAnchorProperty(e);)skipSeparationSpace(e,!0,-1)?(p=!0,u=a,e.lineIndent>r?c=1:e.lineIndent===r?c=0:e.lineIndent<r&&(c=-1)):u=!1;if(u&&(u=p||o),(c===1||CONTEXT_BLOCK_OUT===n)&&(CONTEXT_FLOW_IN===n||CONTEXT_FLOW_OUT===n?_=r:_=r+1,g=e.position-e.lineStart,c===1?u&&(readBlockSequence(e,g)||readBlockMapping(e,g,_))||readFlowCollection(e,_)?f=!0:(l&&readBlockScalar(e,_)||readSingleQuotedScalar(e,_)||readDoubleQuotedScalar(e,_)?f=!0:readAlias(e)?(f=!0,(e.tag!==null||e.anchor!==null)&&throwError(e,"alias node should not have any properties")):readPlainScalar(e,_,CONTEXT_FLOW_IN===n)&&(f=!0,e.tag===null&&(e.tag="?")),e.anchor!==null&&(e.anchorMap[e.anchor]=e.result)):c===0&&(f=u&&readBlockSequence(e,g))),e.tag===null)e.anchor!==null&&(e.anchorMap[e.anchor]=e.result);else if(e.tag==="?"){for(e.result!==null&&e.kind!=="scalar"&&throwError(e,'unacceptable node kind for !<?> tag; it should be "scalar", not "'+e.kind+'"'),s=0,h=e.implicitTypes.length;s<h;s+=1)if(m=e.implicitTypes[s],m.resolve(e.result)){e.result=m.construct(e.result),e.tag=m.tag,e.anchor!==null&&(e.anchorMap[e.anchor]=e.result);break}}else if(e.tag!=="!"){if(_hasOwnProperty$1.call(e.typeMap[e.kind||"fallback"],e.tag))m=e.typeMap[e.kind||"fallback"][e.tag];else for(m=null,d=e.typeMap.multi[e.kind||"fallback"],s=0,h=d.length;s<h;s+=1)if(e.tag.slice(0,d[s].tag.length)===d[s].tag){m=d[s];break}m||throwError(e,"unknown tag !<"+e.tag+">"),e.result!==null&&m.kind!==e.kind&&throwError(e,"unacceptable node kind for !<"+e.tag+'> tag; it should be "'+m.kind+'", not "'+e.kind+'"'),m.resolve(e.result,e.tag)?(e.result=m.construct(e.result,e.tag),e.anchor!==null&&(e.anchorMap[e.anchor]=e.result)):throwError(e,"cannot resolve a node with !<"+e.tag+"> explicit tag")}return e.listener!==null&&e.listener("close",e),e.tag!==null||e.anchor!==null||f}function readDocument(e){var r=e.position,n,t,o,a=!1,l;for(e.version=null,e.checkLineBreaks=e.legacy,e.tagMap=Object.create(null),e.anchorMap=Object.create(null);(l=e.input.charCodeAt(e.position))!==0&&(skipSeparationSpace(e,!0,-1),l=e.input.charCodeAt(e.position),!(e.lineIndent>0||l!==37));){for(a=!0,l=e.input.charCodeAt(++e.position),n=e.position;l!==0&&!is_WS_OR_EOL(l);)l=e.input.charCodeAt(++e.position);for(t=e.input.slice(n,e.position),o=[],t.length<1&&throwError(e,"directive name must not be less than one character in length");l!==0;){for(;is_WHITE_SPACE(l);)l=e.input.charCodeAt(++e.position);if(l===35){do l=e.input.charCodeAt(++e.position);while(l!==0&&!is_EOL(l));break}if(is_EOL(l))break;for(n=e.position;l!==0&&!is_WS_OR_EOL(l);)l=e.input.charCodeAt(++e.position);o.push(e.input.slice(n,e.position))}l!==0&&readLineBreak(e),_hasOwnProperty$1.call(directiveHandlers,t)?directiveHandlers[t](e,t,o):throwWarning(e,'unknown document directive "'+t+'"')}if(skipSeparationSpace(e,!0,-1),e.lineIndent===0&&e.input.charCodeAt(e.position)===45&&e.input.charCodeAt(e.position+1)===45&&e.input.charCodeAt(e.position+2)===45?(e.position+=3,skipSeparationSpace(e,!0,-1)):a&&throwError(e,"directives end mark is expected"),composeNode(e,e.lineIndent-1,CONTEXT_BLOCK_OUT,!1,!0),skipSeparationSpace(e,!0,-1),e.checkLineBreaks&&PATTERN_NON_ASCII_LINE_BREAKS.test(e.input.slice(r,e.position))&&throwWarning(e,"non-ASCII line breaks are interpreted as content"),e.documents.push(e.result),e.position===e.lineStart&&testDocumentSeparator(e)){e.input.charCodeAt(e.position)===46&&(e.position+=3,skipSeparationSpace(e,!0,-1));return}if(e.position<e.length-1)throwError(e,"end of the stream or a document separator is expected");else return}function loadDocuments(e,r){e=String(e),r=r||{},e.length!==0&&(e.charCodeAt(e.length-1)!==10&&e.charCodeAt(e.length-1)!==13&&(e+=`
+`),e.charCodeAt(0)===65279&&(e=e.slice(1)));var n=new State$1(e,r),t=e.indexOf("\0");for(t!==-1&&(n.position=t,throwError(n,"null byte is not allowed in input")),n.input+="\0";n.input.charCodeAt(n.position)===32;)n.lineIndent+=1,n.position+=1;for(;n.position<n.length-1;)readDocument(n);return n.documents}function loadAll$1(e,r,n){r!==null&&typeof r=="object"&&typeof n>"u"&&(n=r,r=null);var t=loadDocuments(e,n);if(typeof r!="function")return t;for(var o=0,a=t.length;o<a;o+=1)r(t[o])}function load$1(e,r){var n=loadDocuments(e,r);if(n.length!==0){if(n.length===1)return n[0];throw new exception("expected a single document in the stream, but found more")}}var loadAll_1=loadAll$1,load_1=load$1,loader={loadAll:loadAll_1,load:load_1},_toString=Object.prototype.toString,_hasOwnProperty=Object.prototype.hasOwnProperty,CHAR_BOM=65279,CHAR_TAB=9,CHAR_LINE_FEED=10,CHAR_CARRIAGE_RETURN=13,CHAR_SPACE=32,CHAR_EXCLAMATION=33,CHAR_DOUBLE_QUOTE=34,CHAR_SHARP=35,CHAR_PERCENT=37,CHAR_AMPERSAND=38,CHAR_SINGLE_QUOTE=39,CHAR_ASTERISK=42,CHAR_COMMA=44,CHAR_MINUS=45,CHAR_COLON=58,CHAR_EQUALS=61,CHAR_GREATER_THAN=62,CHAR_QUESTION=63,CHAR_COMMERCIAL_AT=64,CHAR_LEFT_SQUARE_BRACKET=91,CHAR_RIGHT_SQUARE_BRACKET=93,CHAR_GRAVE_ACCENT=96,CHAR_LEFT_CURLY_BRACKET=123,CHAR_VERTICAL_LINE=124,CHAR_RIGHT_CURLY_BRACKET=125,ESCAPE_SEQUENCES={};ESCAPE_SEQUENCES[0]="\\0";ESCAPE_SEQUENCES[7]="\\a";ESCAPE_SEQUENCES[8]="\\b";ESCAPE_SEQUENCES[9]="\\t";ESCAPE_SEQUENCES[10]="\\n";ESCAPE_SEQUENCES[11]="\\v";ESCAPE_SEQUENCES[12]="\\f";ESCAPE_SEQUENCES[13]="\\r";ESCAPE_SEQUENCES[27]="\\e";ESCAPE_SEQUENCES[34]='\\"';ESCAPE_SEQUENCES[92]="\\\\";ESCAPE_SEQUENCES[133]="\\N";ESCAPE_SEQUENCES[160]="\\_";ESCAPE_SEQUENCES[8232]="\\L";ESCAPE_SEQUENCES[8233]="\\P";var DEPRECATED_BOOLEANS_SYNTAX=["y","Y","yes","Yes","YES","on","On","ON","n","N","no","No","NO","off","Off","OFF"],DEPRECATED_BASE60_SYNTAX=/^[-+]?[0-9_]+(?::[0-9_]+)+(?:\.[0-9_]*)?$/;function compileStyleMap(e,r){var n,t,o,a,l,u,c;if(r===null)return{};for(n={},t=Object.keys(r),o=0,a=t.length;o<a;o+=1)l=t[o],u=String(r[l]),l.slice(0,2)==="!!"&&(l="tag:yaml.org,2002:"+l.slice(2)),c=e.compiledTypeMap.fallback[l],c&&_hasOwnProperty.call(c.styleAliases,u)&&(u=c.styleAliases[u]),n[l]=u;return n}function encodeHex(e){var r,n,t;if(r=e.toString(16).toUpperCase(),e<=255)n="x",t=2;else if(e<=65535)n="u",t=4;else if(e<=4294967295)n="U",t=8;else throw new exception("code point within a string may not be greater than 0xFFFFFFFF");return"\\"+n+common.repeat("0",t-r.length)+r}var QUOTING_TYPE_SINGLE=1,QUOTING_TYPE_DOUBLE=2;function State(e){this.schema=e.schema||_default,this.indent=Math.max(1,e.indent||2),this.noArrayIndent=e.noArrayIndent||!1,this.skipInvalid=e.skipInvalid||!1,this.flowLevel=common.isNothing(e.flowLevel)?-1:e.flowLevel,this.styleMap=compileStyleMap(this.schema,e.styles||null),this.sortKeys=e.sortKeys||!1,this.lineWidth=e.lineWidth||80,this.noRefs=e.noRefs||!1,this.noCompatMode=e.noCompatMode||!1,this.condenseFlow=e.condenseFlow||!1,this.quotingType=e.quotingType==='"'?QUOTING_TYPE_DOUBLE:QUOTING_TYPE_SINGLE,this.forceQuotes=e.forceQuotes||!1,this.replacer=typeof e.replacer=="function"?e.replacer:null,this.implicitTypes=this.schema.compiledImplicit,this.explicitTypes=this.schema.compiledExplicit,this.tag=null,this.result="",this.duplicates=[],this.usedDuplicates=null}function indentString(e,r){for(var n=common.repeat(" ",r),t=0,o=-1,a="",l,u=e.length;t<u;)o=e.indexOf(`
+`,t),o===-1?(l=e.slice(t),t=u):(l=e.slice(t,o+1),t=o+1),l.length&&l!==`
+`&&(a+=n),a+=l;return a}function generateNextLine(e,r){return`
+`+common.repeat(" ",e.indent*r)}function testImplicitResolving(e,r){var n,t,o;for(n=0,t=e.implicitTypes.length;n<t;n+=1)if(o=e.implicitTypes[n],o.resolve(r))return!0;return!1}function isWhitespace(e){return e===CHAR_SPACE||e===CHAR_TAB}function isPrintable(e){return 32<=e&&e<=126||161<=e&&e<=55295&&e!==8232&&e!==8233||57344<=e&&e<=65533&&e!==CHAR_BOM||65536<=e&&e<=1114111}function isNsCharOrWhitespace(e){return isPrintable(e)&&e!==CHAR_BOM&&e!==CHAR_CARRIAGE_RETURN&&e!==CHAR_LINE_FEED}function isPlainSafe(e,r,n){var t=isNsCharOrWhitespace(e),o=t&&!isWhitespace(e);return(n?t:t&&e!==CHAR_COMMA&&e!==CHAR_LEFT_SQUARE_BRACKET&&e!==CHAR_RIGHT_SQUARE_BRACKET&&e!==CHAR_LEFT_CURLY_BRACKET&&e!==CHAR_RIGHT_CURLY_BRACKET)&&e!==CHAR_SHARP&&!(r===CHAR_COLON&&!o)||isNsCharOrWhitespace(r)&&!isWhitespace(r)&&e===CHAR_SHARP||r===CHAR_COLON&&o}function isPlainSafeFirst(e){return isPrintable(e)&&e!==CHAR_BOM&&!isWhitespace(e)&&e!==CHAR_MINUS&&e!==CHAR_QUESTION&&e!==CHAR_COLON&&e!==CHAR_COMMA&&e!==CHAR_LEFT_SQUARE_BRACKET&&e!==CHAR_RIGHT_SQUARE_BRACKET&&e!==CHAR_LEFT_CURLY_BRACKET&&e!==CHAR_RIGHT_CURLY_BRACKET&&e!==CHAR_SHARP&&e!==CHAR_AMPERSAND&&e!==CHAR_ASTERISK&&e!==CHAR_EXCLAMATION&&e!==CHAR_VERTICAL_LINE&&e!==CHAR_EQUALS&&e!==CHAR_GREATER_THAN&&e!==CHAR_SINGLE_QUOTE&&e!==CHAR_DOUBLE_QUOTE&&e!==CHAR_PERCENT&&e!==CHAR_COMMERCIAL_AT&&e!==CHAR_GRAVE_ACCENT}function isPlainSafeLast(e){return!isWhitespace(e)&&e!==CHAR_COLON}function codePointAt(e,r){var n=e.charCodeAt(r),t;return n>=55296&&n<=56319&&r+1<e.length&&(t=e.charCodeAt(r+1),t>=56320&&t<=57343)?(n-55296)*1024+t-56320+65536:n}function needIndentIndicator(e){var r=/^\n* /;return r.test(e)}var STYLE_PLAIN=1,STYLE_SINGLE=2,STYLE_LITERAL=3,STYLE_FOLDED=4,STYLE_DOUBLE=5;function chooseScalarStyle(e,r,n,t,o,a,l,u){var c,p=0,f=null,s=!1,h=!1,d=t!==-1,m=-1,_=isPlainSafeFirst(codePointAt(e,0))&&isPlainSafeLast(codePointAt(e,e.length-1));if(r||l)for(c=0;c<e.length;p>=65536?c+=2:c++){if(p=codePointAt(e,c),!isPrintable(p))return STYLE_DOUBLE;_=_&&isPlainSafe(p,f,u),f=p}else{for(c=0;c<e.length;p>=65536?c+=2:c++){if(p=codePointAt(e,c),p===CHAR_LINE_FEED)s=!0,d&&(h=h||c-m-1>t&&e[m+1]!==" ",m=c);else if(!isPrintable(p))return STYLE_DOUBLE;_=_&&isPlainSafe(p,f,u),f=p}h=h||d&&c-m-1>t&&e[m+1]!==" "}return!s&&!h?_&&!l&&!o(e)?STYLE_PLAIN:a===QUOTING_TYPE_DOUBLE?STYLE_DOUBLE:STYLE_SINGLE:n>9&&needIndentIndicator(e)?STYLE_DOUBLE:l?a===QUOTING_TYPE_DOUBLE?STYLE_DOUBLE:STYLE_SINGLE:h?STYLE_FOLDED:STYLE_LITERAL}function writeScalar(e,r,n,t,o){e.dump=function(){if(r.length===0)return e.quotingType===QUOTING_TYPE_DOUBLE?'""':"''";if(!e.noCompatMode&&(DEPRECATED_BOOLEANS_SYNTAX.indexOf(r)!==-1||DEPRECATED_BASE60_SYNTAX.test(r)))return e.quotingType===QUOTING_TYPE_DOUBLE?'"'+r+'"':"'"+r+"'";var a=e.indent*Math.max(1,n),l=e.lineWidth===-1?-1:Math.max(Math.min(e.lineWidth,40),e.lineWidth-a),u=t||e.flowLevel>-1&&n>=e.flowLevel;function c(p){return testImplicitResolving(e,p)}switch(chooseScalarStyle(r,u,e.indent,l,c,e.quotingType,e.forceQuotes&&!t,o)){case STYLE_PLAIN:return r;case STYLE_SINGLE:return"'"+r.replace(/'/g,"''")+"'";case STYLE_LITERAL:return"|"+blockHeader(r,e.indent)+dropEndingNewline(indentString(r,a));case STYLE_FOLDED:return">"+blockHeader(r,e.indent)+dropEndingNewline(indentString(foldString(r,l),a));case STYLE_DOUBLE:return'"'+escapeString(r)+'"';default:throw new exception("impossible error: invalid scalar style")}}()}function blockHeader(e,r){var n=needIndentIndicator(e)?String(r):"",t=e[e.length-1]===`
+`,o=t&&(e[e.length-2]===`
+`||e===`
+`),a=o?"+":t?"":"-";return n+a+`
+`}function dropEndingNewline(e){return e[e.length-1]===`
+`?e.slice(0,-1):e}function foldString(e,r){for(var n=/(\n+)([^\n]*)/g,t=function(){var p=e.indexOf(`
+`);return p=p!==-1?p:e.length,n.lastIndex=p,foldLine(e.slice(0,p),r)}(),o=e[0]===`
+`||e[0]===" ",a,l;l=n.exec(e);){var u=l[1],c=l[2];a=c[0]===" ",t+=u+(!o&&!a&&c!==""?`
+`:"")+foldLine(c,r),o=a}return t}function foldLine(e,r){if(e===""||e[0]===" ")return e;for(var n=/ [^ ]/g,t,o=0,a,l=0,u=0,c="";t=n.exec(e);)u=t.index,u-o>r&&(a=l>o?l:u,c+=`
+`+e.slice(o,a),o=a+1),l=u;return c+=`
+`,e.length-o>r&&l>o?c+=e.slice(o,l)+`
+`+e.slice(l+1):c+=e.slice(o),c.slice(1)}function escapeString(e){for(var r="",n=0,t,o=0;o<e.length;n>=65536?o+=2:o++)n=codePointAt(e,o),t=ESCAPE_SEQUENCES[n],!t&&isPrintable(n)?(r+=e[o],n>=65536&&(r+=e[o+1])):r+=t||encodeHex(n);return r}function writeFlowSequence(e,r,n){var t="",o=e.tag,a,l,u;for(a=0,l=n.length;a<l;a+=1)u=n[a],e.replacer&&(u=e.replacer.call(n,String(a),u)),(writeNode(e,r,u,!1,!1)||typeof u>"u"&&writeNode(e,r,null,!1,!1))&&(t!==""&&(t+=","+(e.condenseFlow?"":" ")),t+=e.dump);e.tag=o,e.dump="["+t+"]"}function writeBlockSequence(e,r,n,t){var o="",a=e.tag,l,u,c;for(l=0,u=n.length;l<u;l+=1)c=n[l],e.replacer&&(c=e.replacer.call(n,String(l),c)),(writeNode(e,r+1,c,!0,!0,!1,!0)||typeof c>"u"&&writeNode(e,r+1,null,!0,!0,!1,!0))&&((!t||o!=="")&&(o+=generateNextLine(e,r)),e.dump&&CHAR_LINE_FEED===e.dump.charCodeAt(0)?o+="-":o+="- ",o+=e.dump);e.tag=a,e.dump=o||"[]"}function writeFlowMapping(e,r,n){var t="",o=e.tag,a=Object.keys(n),l,u,c,p,f;for(l=0,u=a.length;l<u;l+=1)f="",t!==""&&(f+=", "),e.condenseFlow&&(f+='"'),c=a[l],p=n[c],e.replacer&&(p=e.replacer.call(n,c,p)),writeNode(e,r,c,!1,!1)&&(e.dump.length>1024&&(f+="? "),f+=e.dump+(e.condenseFlow?'"':"")+":"+(e.condenseFlow?"":" "),writeNode(e,r,p,!1,!1)&&(f+=e.dump,t+=f));e.tag=o,e.dump="{"+t+"}"}function writeBlockMapping(e,r,n,t){var o="",a=e.tag,l=Object.keys(n),u,c,p,f,s,h;if(e.sortKeys===!0)l.sort();else if(typeof e.sortKeys=="function")l.sort(e.sortKeys);else if(e.sortKeys)throw new exception("sortKeys must be a boolean or a function");for(u=0,c=l.length;u<c;u+=1)h="",(!t||o!=="")&&(h+=generateNextLine(e,r)),p=l[u],f=n[p],e.replacer&&(f=e.replacer.call(n,p,f)),writeNode(e,r+1,p,!0,!0,!0)&&(s=e.tag!==null&&e.tag!=="?"||e.dump&&e.dump.length>1024,s&&(e.dump&&CHAR_LINE_FEED===e.dump.charCodeAt(0)?h+="?":h+="? "),h+=e.dump,s&&(h+=generateNextLine(e,r)),writeNode(e,r+1,f,!0,s)&&(e.dump&&CHAR_LINE_FEED===e.dump.charCodeAt(0)?h+=":":h+=": ",h+=e.dump,o+=h));e.tag=a,e.dump=o||"{}"}function detectType(e,r,n){var t,o,a,l,u,c;for(o=n?e.explicitTypes:e.implicitTypes,a=0,l=o.length;a<l;a+=1)if(u=o[a],(u.instanceOf||u.predicate)&&(!u.instanceOf||typeof r=="object"&&r instanceof u.instanceOf)&&(!u.predicate||u.predicate(r))){if(n?u.multi&&u.representName?e.tag=u.representName(r):e.tag=u.tag:e.tag="?",u.represent){if(c=e.styleMap[u.tag]||u.defaultStyle,_toString.call(u.represent)==="[object Function]")t=u.represent(r,c);else if(_hasOwnProperty.call(u.represent,c))t=u.represent[c](r,c);else throw new exception("!<"+u.tag+'> tag resolver accepts not "'+c+'" style');e.dump=t}return!0}return!1}function writeNode(e,r,n,t,o,a,l){e.tag=null,e.dump=n,detectType(e,n,!1)||detectType(e,n,!0);var u=_toString.call(e.dump),c=t,p;t&&(t=e.flowLevel<0||e.flowLevel>r);var f=u==="[object Object]"||u==="[object Array]",s,h;if(f&&(s=e.duplicates.indexOf(n),h=s!==-1),(e.tag!==null&&e.tag!=="?"||h||e.indent!==2&&r>0)&&(o=!1),h&&e.usedDuplicates[s])e.dump="*ref_"+s;else{if(f&&h&&!e.usedDuplicates[s]&&(e.usedDuplicates[s]=!0),u==="[object Object]")t&&Object.keys(e.dump).length!==0?(writeBlockMapping(e,r,e.dump,o),h&&(e.dump="&ref_"+s+e.dump)):(writeFlowMapping(e,r,e.dump),h&&(e.dump="&ref_"+s+" "+e.dump));else if(u==="[object Array]")t&&e.dump.length!==0?(e.noArrayIndent&&!l&&r>0?writeBlockSequence(e,r-1,e.dump,o):writeBlockSequence(e,r,e.dump,o),h&&(e.dump="&ref_"+s+e.dump)):(writeFlowSequence(e,r,e.dump),h&&(e.dump="&ref_"+s+" "+e.dump));else if(u==="[object String]")e.tag!=="?"&&writeScalar(e,e.dump,r,a,c);else{if(u==="[object Undefined]")return!1;if(e.skipInvalid)return!1;throw new exception("unacceptable kind of an object to dump "+u)}e.tag!==null&&e.tag!=="?"&&(p=encodeURI(e.tag[0]==="!"?e.tag.slice(1):e.tag).replace(/!/g,"%21"),e.tag[0]==="!"?p="!"+p:p.slice(0,18)==="tag:yaml.org,2002:"?p="!!"+p.slice(18):p="!<"+p+">",e.dump=p+" "+e.dump)}return!0}function getDuplicateReferences(e,r){var n=[],t=[],o,a;for(inspectNode(e,n,t),o=0,a=t.length;o<a;o+=1)r.duplicates.push(n[t[o]]);r.usedDuplicates=new Array(a)}function inspectNode(e,r,n){var t,o,a;if(e!==null&&typeof e=="object")if(o=r.indexOf(e),o!==-1)n.indexOf(o)===-1&&n.push(o);else if(r.push(e),Array.isArray(e))for(o=0,a=e.length;o<a;o+=1)inspectNode(e[o],r,n);else for(t=Object.keys(e),o=0,a=t.length;o<a;o+=1)inspectNode(e[t[o]],r,n)}function dump$1(e,r){r=r||{};var n=new State(r);n.noRefs||getDuplicateReferences(e,n);var t=e;return n.replacer&&(t=n.replacer.call({"":t},"",t)),writeNode(n,0,t,!0,!0)?n.dump+`
+`:""}var dump_1=dump$1,dumper={dump:dump_1};function renamed(e,r){return function(){throw new Error("Function yaml."+e+" is removed in js-yaml 4. Use yaml."+r+" instead, which is now safe by default.")}}var Type=type,Schema=schema,FAILSAFE_SCHEMA=failsafe,JSON_SCHEMA=json,CORE_SCHEMA=core,DEFAULT_SCHEMA=_default,load=loader.load,loadAll=loader.loadAll,dump=dumper.dump,YAMLException=exception,types={binary,float,map,null:_null,pairs,set,timestamp,bool,int,merge,omap,seq,str},safeLoad=renamed("safeLoad","load"),safeLoadAll=renamed("safeLoadAll","loadAll"),safeDump=renamed("safeDump","dump"),jsYaml={Type,Schema,FAILSAFE_SCHEMA,JSON_SCHEMA,CORE_SCHEMA,DEFAULT_SCHEMA,load,loadAll,dump,YAMLException,types,safeLoad,safeLoadAll,safeDump};function getYamlLib(){if(typeof jsYaml<"u"&&jsYaml)return jsYaml;if(typeof jsyaml<"u")return jsyaml;if(typeof jsYAML<"u")return jsYAML;throw new Error("js-yaml library not loaded. Make sure it is included via CDN in browser or installed as a dependency in Node.js.")}class YAPLTranspiler{constructor(){this.functions={},this.globals={},this.params={}}run(e){const n=getYamlLib().load(e),t=this.transpile(n);return this.execute(t)}transpile(e){const r=[];e.imports&&r.push(`// Imports: ${e.imports.join(", ")}`);const n=[];e.globals&&n.push(...e.globals.map(a=>this.transpileGlobal(a)));const t=[];e.functions&&t.push(...e.functions.map(a=>this.transpileFunction(a)));let o="";if(e.entry&&(o=this.transpileEntryBody(e.entry)),n.length>0&&r.push(...n),t.length>0&&r.push(...t),o){const a=o.split(`
+`).map(l=>l.replace(/^  /,"")).join(`
+`);r.push(`function main() {
+${a}
+}`)}else r.push(`function main() {
+  return null;
+}`);return r.push("main()"),r.join(`
+`)}transpileGlobal(e){const r=e.name,n=this.transpileExpr(e.value,0);return this.globals[r]=!0,`let ${r} = ${n};`}transpileFunction(e){const r=e.name,n=e.params||[],t=e.body||[];this.functions[r]=!0;const o={...this.params};n.forEach(l=>{this.params[l]=!0});let a;if(Array.isArray(t))if(t.length===0)a="return null;";else{const l=t.map((u,c)=>{const p=this.transpileExpr(u,0);return c===t.length-1?`return ${p};`:`${p};`});a=this.indent(l.join(`
+`),2)}else a=`return ${this.transpileExpr(t,0)};`;return this.params=o,`function ${r}(${n.join(", ")}) {
+${a}
+}`}transpileEntryBody(e){if(!Array.isArray(e))return this.indent(`return ${this.transpileExpr(e,0)};`,2);if(e.length===0)return this.indent("return null;",2);if(e.length===1)return this.indent(`return ${this.transpileExpr(e[0],0)};`,2);const r=[],n=new Set;for(const l of e)if(typeof l=="object"&&l.let){const u=l.let;if(typeof u=="object"&&u.name){const c=u.name,p=this.transpileExpr(u.value,0);r.push({type:"let",name:c,value:`let ${c} = ${p};`}),this.params[c]=!0,n.add(c)}else Array.isArray(u)&&u.forEach(c=>{const p=c.name,f=this.transpileExpr(c.value,0);r.push({type:"let",name:p,value:`let ${p} = ${f};`}),this.params[p]=!0,n.add(p)})}else{const u=this.transpileExpr(l,0);r.push({type:"expr",value:`${u};`})}if(r.length===0)return this.indent("return null;",2);const t=r.map(l=>l.value),o=t[t.length-1],a=r[r.length-1];return a.type==="let"?(t[t.length-1]=o.replace(";",""),t.push(`return ${a.name};`)):t[t.length-1]=`return ${o.replace(";","")};`,this.indent(t.join(`
+`),2)}transpileExpr(e,r=0){if(e==null)return"null";if(Array.isArray(e))return this.transpileArrayExpr(e,r);if(typeof e=="object")return this.transpileObjectExpr(e,r);if(typeof e=="string")return this.functions[e]||this.globals[e]||this.params[e]?this.transpileIdentifier(e):JSON.stringify(e);if(this.isPrimitive(e))return JSON.stringify(e);throw new Error(`Cannot transpile: ${JSON.stringify(e)}`)}transpileIdentifier(e){return this.functions[e]||this.globals[e],e}transpileArrayExpr(e,r=0){if(e.length===0)return"[]";const[n,...t]=e;if(typeof n=="string"&&this.isOperator(n))return this.transpileOperator(n,t,r);if(n===".")return this.transpilePropertyAccess(t,r);const o=this.transpileIdentifier(n),a=t.map(l=>this.transpileExpr(l,0));return this.maybeParenthesize(`${o}(${a.join(", ")})`,r,20)}transpileObjectExpr(e,r=0){if(e.if){const t=e.if,o=this.transpileExpr(t.cond,0),a=this.transpileExpr(t.then,0),l=t.else!==void 0?this.transpileExpr(t.else,0):"null";return this.maybeParenthesize(`${o} ? ${a} : ${l}`,r,3)}if(e.while){const t=e.while,o=this.transpileExpr(t.cond,0),a=Array.isArray(t.body)?t.body.map(u=>this.transpileExpr(u,0)).join(`;
+      `):this.transpileExpr(t.body,0),l=this.indent(a,6);return`(() => {
+    while (${o}) {
+      ${l};
     }
-    
-    const ast = yamlLib.load(yamlContent);
-    
-    // Process AST
-    const jsCode = this.transpile(ast);
-    
-    // Execute generated JavaScript
-    return this.execute(jsCode);
-  }
+  })()`}return e.let?this.transpileLet(e.let,r):e.return!==void 0?this.transpileExpr(e.return,0):`{${Object.entries(e).map(([t,o])=>`${t}: ${this.transpileExpr(o,0)}`).join(", ")}}`}transpileLet(e,r=0){if(typeof e=="object"&&e!==null&&!Array.isArray(e)&&e.name){const n=e,t=n.name,o=this.transpileExpr(n.value,0);return this.maybeParenthesize(`(() => {
+    let ${t} = ${o};
+    return ${t};
+  })()`,r,0)}else if(Array.isArray(e)){const n=e.map(t=>{const o=t.name,a=this.transpileExpr(t.value,0);return`let ${o} = ${a};`}).join(`
+    `);return this.maybeParenthesize(`(() => {
+    ${n}
+  })()`,r,0)}throw new Error(`Invalid let form: ${JSON.stringify(e)}`)}transpileOperator(e,r,n=0){const o={"||":1,"&&":2,"==":3,"!=":3,"<":3,">":3,"<=":3,">=":3,"+":4,"-":4,"*":5,"/":5,"%":5,"**":6,"!":7,typeof:7,instanceof:7,"unary+":7,"unary-":7}[e]||0;switch(e){case"+":if(r.length===1){const A=this.transpileExpr(r[0],o);return this.maybeParenthesize(`+${A}`,n,o)}const a=r.map((A,x)=>this.transpileExpr(A,o)),l=this.convertStringConcatToTemplate(a);if(l)return this.maybeParenthesize(l,n,o);const u=a.join(" + ");return this.maybeParenthesize(u,n,o);case"-":if(r.length===1){const A=this.transpileExpr(r[0],o);return this.maybeParenthesize(`-${A}`,n,o)}const c=r.map((A,x)=>{const y=o;return this.transpileExpr(A,y)});return this.maybeParenthesize(c.join(" - "),n,o);case"*":const p=r.map((A,x)=>{const y=o;return this.transpileExpr(A,y)});return this.maybeParenthesize(p.join(" * "),n,o);case"/":const f=r.map((A,x)=>{const y=o;return this.transpileExpr(A,y)});return this.maybeParenthesize(f.join(" / "),n,o);case"%":const s=r.map((A,x)=>{const y=o;return this.transpileExpr(A,y)});return this.maybeParenthesize(`${s[0]} % ${s[1]}`,n,o);case"**":const h=r.map((A,x)=>{const y=o;return this.transpileExpr(A,y)});return this.maybeParenthesize(`${h[0]} ** ${h[1]}`,n,o);case"==":const d=r.map((A,x)=>this.transpileExpr(A,o));return this.maybeParenthesize(`${d[0]} === ${d[1]}`,n,o);case"!=":const m=r.map((A,x)=>this.transpileExpr(A,o));return this.maybeParenthesize(`${m[0]} !== ${m[1]}`,n,o);case"<":const _=r.map((A,x)=>this.transpileExpr(A,o));return this.maybeParenthesize(`${_[0]} < ${_[1]}`,n,o);case">":const g=r.map((A,x)=>this.transpileExpr(A,o));return this.maybeParenthesize(`${g[0]} > ${g[1]}`,n,o);case"<=":const S=r.map((A,x)=>this.transpileExpr(A,o));return this.maybeParenthesize(`${S[0]} <= ${S[1]}`,n,o);case">=":const E=r.map((A,x)=>this.transpileExpr(A,o));return this.maybeParenthesize(`${E[0]} >= ${E[1]}`,n,o);case"&&":const v=r.map((A,x)=>this.transpileExpr(A,o));return this.maybeParenthesize(v.join(" && "),n,o);case"||":const O=r.map((A,x)=>this.transpileExpr(A,o));return this.maybeParenthesize(O.join(" || "),n,o);case"!":const T=this.transpileExpr(r[0],o);return this.maybeParenthesize(`!${T}`,n,o);case"typeof":const L=this.transpileExpr(r[0],o);return this.maybeParenthesize(`typeof ${L}`,n,o);case"instanceof":const C=r.map((A,x)=>this.transpileExpr(A,o));return this.maybeParenthesize(`${C[0]} instanceof ${C[1]}`,n,o);default:throw new Error(`Unknown operator: ${e}`)}}transpilePropertyAccess(e,r=0){if(e.length<2)throw new Error("Property access requires at least object and property");const n=this.transpileExpr(e[0],20),t=e[1];if(typeof t=="string"&&/^[a-zA-Z_$][a-zA-Z0-9_$]*$/.test(t)){if(e.length===2)return this.maybeParenthesize(`${n}.${t}`,r,20);{const o=e.slice(2).map(a=>this.transpileExpr(a,20));return this.maybeParenthesize(`${n}.${t}(${o.join(", ")})`,r,20)}}else{const o=this.transpileExpr(t,20);if(e.length===2)return this.maybeParenthesize(`${n}[${o}]`,r,20);{const a=e.slice(2).map(l=>this.transpileExpr(l,20));return this.maybeParenthesize(`${n}[${o}](${a.join(", ")})`,r,20)}}}isOperator(e){return["+","-","*","/","%","**","==","!=","<",">","<=",">=","&&","||","!","typeof","instanceof","."].includes(e)}isPrimitive(e){return typeof e=="number"||typeof e=="string"||typeof e=="boolean"}maybeParenthesize(e,r,n){return r>n?`(${e})`:e}indent(e,r){const n=" ".repeat(r);return e.split(`
+`).map(t=>n+t).join(`
+`)}convertStringConcatToTemplate(e){if(e.length===0||!e.some(a=>{const l=a.trim();return l.startsWith('"')&&l.endsWith('"')||l.startsWith("'")&&l.endsWith("'")}))return null;const n=[];let t="";for(const a of e){const l=a.trim();if(l.startsWith('"')&&l.endsWith('"')||l.startsWith("'")&&l.endsWith("'")){const c=l.slice(1,-1);t+=c}else t&&(n.push({type:"text",content:t}),t=""),n.push({type:"expr",content:a})}return t&&n.push({type:"text",content:t}),n.every(a=>a.type==="text")?JSON.stringify(n.map(a=>a.content).join("")):`\`${n.map(a=>a.type==="text"?a.content.replace(/\\/g,"\\\\").replace(/`/g,"\\`").replace(/\$/g,"\\$"):`\${${a.content}}`).join("")}\``}execute(jsCode){try{return eval(jsCode)}catch(e){throw console.error("Generated JavaScript:"),console.error(jsCode),e}}}window.YAPLTranspiler=YAPLTranspiler;
 
-  // Transpile AST to JavaScript
-  transpile(ast) {
-    const parts = [];
-
-    // Handle imports (for future expansion)
-    if (ast.imports) {
-      parts.push(`// Imports: ${ast.imports.join(', ')}`);
-    }
-
-    // Transpile globals
-    if (ast.globals) {
-      parts.push(...ast.globals.map(g => this.transpileGlobal(g)));
-    }
-
-    // Transpile functions
-    if (ast.functions) {
-      parts.push(...ast.functions.map(f => this.transpileFunction(f)));
-    }
-
-    // Transpile entry point
-    if (ast.entry) {
-      parts.push(this.transpileEntry(ast.entry));
-    }
-
-    return parts.join('\n\n');
-  }
-
-  // Transpile global variable
-  transpileGlobal(global) {
-    const name = global.name;
-    const value = this.transpileExpr(global.value);
-    this.globals[name] = true;
-    return `let ${name} = ${value};`;
-  }
-
-  // Transpile function definition
-  transpileFunction(func) {
-    const name = func.name;
-    const params = func.params || [];
-    const body = func.body || [];
-    
-    this.functions[name] = true;
-
-    // Track parameters so they're treated as identifiers in the function body
-    const oldParams = { ...this.params };
-    params.forEach(param => {
-      this.params[param] = true;
-    });
-
-    // Handle body - could be single expression or list
-    let bodyCode;
-    if (Array.isArray(body)) {
-      if (body.length === 0) {
-        bodyCode = 'return null;';
-      } else {
-        const statements = body.map((stmt, i) => {
-          const code = this.transpileExpr(stmt);
-          // Last statement is return value
-          return i === body.length - 1 ? `return ${code};` : `${code};`;
-        });
-        bodyCode = statements.join('\n  ');
-      }
-    } else {
-      bodyCode = `return ${this.transpileExpr(body)};`;
-    }
-
-    // Restore previous params state
-    this.params = oldParams;
-
-    return `function ${name}(${params.join(', ')}) {\n  ${bodyCode}\n}`;
-  }
-
-  // Transpile entry point
-  transpileEntry(entry) {
-    if (!Array.isArray(entry)) {
-      return `(${this.transpileExpr(entry)})();`;
-    }
-
-    const results = entry.map(expr => this.transpileExpr(expr));
-    if (results.length === 0) {
-      return `(() => { return null; })();`;
-    }
-    const statements = results.map((r, i) => 
-      i === 0 ? `let _ = ${r};` : `_ = ${r};`
-    );
-    return `(() => {\n  ${statements.join('\n  ')}\n  return _;\n})();`;
-  }
-
-  // Transpile expression to JavaScript
-  transpileExpr(expr) {
-    // Handle null/undefined
-    if (expr === null || expr === undefined) {
-      return 'null';
-    }
-
-    // Handle arrays (expressions)
-    if (Array.isArray(expr)) {
-      return this.transpileArrayExpr(expr);
-    }
-
-    // Handle objects (special forms)
-    if (typeof expr === 'object') {
-      return this.transpileObjectExpr(expr);
-    }
-
-    // Handle variable/function reference (string) - check BEFORE primitives
-    // because identifiers are also strings, but shouldn't be JSON.stringify'd
-    if (typeof expr === 'string') {
-      // Treat as identifier if it's registered as a function, global, or parameter
-      // This prevents string literals like "YAPL" from being treated as identifiers
-      if (this.functions[expr] || this.globals[expr] || this.params[expr]) {
-        return this.transpileIdentifier(expr);
-      }
-      // Otherwise treat as string literal
-      return JSON.stringify(expr);
-    }
-
-    // Handle primitives (numbers, booleans)
-    if (this.isPrimitive(expr)) {
-      return JSON.stringify(expr);
-    }
-
-    throw new Error(`Cannot transpile: ${JSON.stringify(expr)}`);
-  }
-
-  // Transpile identifier (variable, function, or JS global)
-  transpileIdentifier(name) {
-    // If it's a YAPL function or global, use it directly
-    if (this.functions[name] || this.globals[name]) {
-      return name;
-    }
-    
-    // Otherwise, it's a JavaScript global - use it directly
-    // JavaScript will resolve it at runtime
-    return name;
-  }
-
-  // Transpile array expression
-  transpileArrayExpr(expr) {
-    if (expr.length === 0) {
-      return '[]';
-    }
-
-    const [first, ...rest] = expr;
-
-    // Check if first element is an operator
-    if (typeof first === 'string' && this.isOperator(first)) {
-      return this.transpileOperator(first, rest);
-    }
-
-    // Check if first element is property access operator
-    if (first === '.') {
-      return this.transpilePropertyAccess(rest);
-    }
-
-    // Function call - first element is function name
-    const funcName = this.transpileIdentifier(first);
-    const args = rest.map(arg => this.transpileExpr(arg));
-    return `${funcName}(${args.join(', ')})`;
-  }
-
-  // Transpile object expression (special forms)
-  transpileObjectExpr(expr) {
-    // if statement
-    if (expr.if) {
-      const cond = this.transpileExpr(expr.if.cond);
-      const thenExpr = this.transpileExpr(expr.if.then);
-      const elseExpr = expr.if.else !== undefined 
-        ? this.transpileExpr(expr.if.else)
-        : 'null';
-      return `(${cond} ? ${thenExpr} : ${elseExpr})`;
-    }
-
-    // while loop
-    if (expr.while) {
-      const cond = this.transpileExpr(expr.while.cond);
-      const body = Array.isArray(expr.while.body)
-        ? expr.while.body.map(s => this.transpileExpr(s)).join(';\n    ')
-        : this.transpileExpr(expr.while.body);
-      return `(() => {\n    while (${cond}) {\n      ${body};\n    }\n  })()`;
-    }
-
-    // let binding
-    if (expr.let) {
-      return this.transpileLet(expr.let);
-    }
-
-    // return statement
-    if (expr.return !== undefined) {
-      return this.transpileExpr(expr.return);
-    }
-
-    // Object literal
-    const entries = Object.entries(expr).map(([k, v]) => {
-      return `${k}: ${this.transpileExpr(v)}`;
-    });
-    return `{${entries.join(', ')}}`;
-  }
-
-  // Transpile let binding
-  transpileLet(letExpr) {
-    if (typeof letExpr === 'object' && letExpr.name) {
-      // Single binding
-      const name = letExpr.name;
-      const value = this.transpileExpr(letExpr.value);
-      return `(() => { let ${name} = ${value}; return ${name}; })()`;
-    } else if (Array.isArray(letExpr)) {
-      // Multiple bindings
-      const bindings = letExpr.map(b => {
-        const name = b.name;
-        const value = this.transpileExpr(b.value);
-        return `let ${name} = ${value};`;
-      }).join('\n    ');
-      return `(() => {\n    ${bindings}\n  })()`;
-    }
-    throw new Error(`Invalid let form: ${JSON.stringify(letExpr)}`);
-  }
-
-  // Transpile operator
-  transpileOperator(op, args) {
-    const jsArgs = args.map(arg => this.transpileExpr(arg));
-
-    switch (op) {
-      // Arithmetic
-      case '+':
-        return args.length === 1 ? `+${jsArgs[0]}` : `(${jsArgs.join(' + ')})`;
-      case '-':
-        return args.length === 1 ? `-${jsArgs[0]}` : `(${jsArgs.join(' - ')})`;
-      case '*':
-        return `(${jsArgs.join(' * ')})`;
-      case '/':
-        return `(${jsArgs.join(' / ')})`;
-      case '%':
-        return `(${jsArgs[0]} % ${jsArgs[1]})`;
-      case '**':
-        return `(${jsArgs[0]} ** ${jsArgs[1]})`;
-
-      // Comparison
-      case '==':
-        return `(${jsArgs[0]} === ${jsArgs[1]})`;
-      case '!=':
-        return `(${jsArgs[0]} !== ${jsArgs[1]})`;
-      case '<':
-        return `(${jsArgs[0]} < ${jsArgs[1]})`;
-      case '>':
-        return `(${jsArgs[0]} > ${jsArgs[1]})`;
-      case '<=':
-        return `(${jsArgs[0]} <= ${jsArgs[1]})`;
-      case '>=':
-        return `(${jsArgs[0]} >= ${jsArgs[1]})`;
-
-      // Logical
-      case '&&':
-        return `(${jsArgs.join(' && ')})`;
-      case '||':
-        return `(${jsArgs.join(' || ')})`;
-      case '!':
-        return `(!${jsArgs[0]})`;
-
-      // Type checking
-      case 'typeof':
-        return `(typeof ${jsArgs[0]})`;
-      case 'instanceof':
-        return `(${jsArgs[0]} instanceof ${jsArgs[1]})`;
-
-      default:
-        throw new Error(`Unknown operator: ${op}`);
-    }
-  }
-
-  // Transpile property access
-  transpilePropertyAccess(args) {
-    if (args.length < 2) {
-      throw new Error('Property access requires at least object and property');
-    }
-
-    const obj = this.transpileExpr(args[0]);
-    const prop = args[1];
-    
-    // If property is a string, use dot notation or bracket notation
-    if (typeof prop === 'string' && /^[a-zA-Z_$][a-zA-Z0-9_$]*$/.test(prop)) {
-      // Valid identifier, use dot notation
-      if (args.length === 2) {
-        return `${obj}.${prop}`;
-      } else {
-        // Method call
-        const methodArgs = args.slice(2).map(arg => this.transpileExpr(arg));
-        return `${obj}.${prop}(${methodArgs.join(', ')})`;
-      }
-    } else {
-      // Use bracket notation
-      const propExpr = this.transpileExpr(prop);
-      if (args.length === 2) {
-        return `${obj}[${propExpr}]`;
-      } else {
-        const methodArgs = args.slice(2).map(arg => this.transpileExpr(arg));
-        return `${obj}[${propExpr}](${methodArgs.join(', ')})`;
-      }
-    }
-  }
-
-  // Check if string is an operator
-  isOperator(str) {
-    const operators = ['+', '-', '*', '/', '%', '**',
-                      '==', '!=', '<', '>', '<=', '>=',
-                      '&&', '||', '!',
-                      'typeof', 'instanceof', '.'];
-    return operators.includes(str);
-  }
-
-  // Check if value is primitive
-  isPrimitive(value) {
-    return typeof value === 'number' ||
-           typeof value === 'string' ||
-           typeof value === 'boolean';
-  }
-
-  // Execute generated JavaScript with eval
-  execute(jsCode) {
-    try {
-      return eval(jsCode);
-    } catch (error) {
-      console.error('Generated JavaScript:', jsCode);
-      throw error;
-    }
-  }
-}
-window.YAPLTranspiler = YAPLTranspiler;
 </script>
 </head>
 <body>
@@ -731,7 +431,11 @@ entry:
         // Parse YAML first to get AST, then transpile
         const ast = jsyaml.load(code);
         const jsCode = transpiler.transpile(ast);
-        javascript.textContent = jsCode;
+        // Format the JavaScript code using js-beautify
+        const formattedCode = typeof js_beautify !== 'undefined' 
+          ? js_beautify(jsCode, { indent_size: 2, space_in_empty_paren: true })
+          : jsCode;
+        javascript.textContent = formattedCode;
         
         // Execute the code
         const result = transpiler.run(code);
@@ -776,7 +480,11 @@ entry:
           output.innerHTML += `<div class="error" style="margin-top: 0.5rem; font-size: 0.9rem;">${escapeHtml(error.stack)}</div>`;
         }
         // Show error in JavaScript pane too
-        javascript.textContent = `// Error transpiling code:\n// ${error.message}`;
+        const errorCode = `// Error transpiling code:\n// ${error.message}`;
+        const formattedErrorCode = typeof js_beautify !== 'undefined'
+          ? js_beautify(errorCode, { indent_size: 2, space_in_empty_paren: true })
+          : errorCode;
+        javascript.textContent = formattedErrorCode;
       }
     }
 
@@ -791,3 +499,4 @@ entry:
   </script>
 </body>
 </html>
+
