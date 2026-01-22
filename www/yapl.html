@@ -1,9 +1,13 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>YAPL - Yet Another Programming Language</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=Oldenburg&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/style.css">
   <script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
   <style>
     * {
@@ -13,72 +17,96 @@
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      font-family: "Oldenburg", serif;
       height: 100vh;
       display: flex;
       flex-direction: column;
-      background: #1e1e1e;
-      color: #d4d4d4;
+      background: #000;
+      color: #fff;
+      position: relative;
+      z-index: 1;
+    }
+
+    dt-header {
+      position: relative;
+      z-index: 10;
+      margin-bottom: 1em;
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      z-index: 1;
+      padding: 1em;
+      padding-bottom: 4em; /* Space for fixed footer */
+      overflow: hidden;
     }
 
     .header {
-      background: #2d2d30;
+      background: #000;
       padding: 1rem;
-      border-bottom: 1px solid #3e3e42;
+      border-bottom: 2px solid #fff;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      font-family: "2Dumb";
+      margin-bottom: 1rem;
     }
 
     .header h1 {
       font-size: 1.5rem;
-      color: #4ec9b0;
+      color: #fff;
+      text-shadow: 2px 0 0 rgba(255, 0, 0, 0.5), -2px 0 0 rgba(0, 255, 255, 0.5);
     }
 
     .run-button {
-      background: #0e639c;
-      color: white;
-      border: none;
+      background: #000;
+      color: #fff;
+      border: 2px solid #fff;
       padding: 0.5rem 1.5rem;
-      border-radius: 4px;
       cursor: pointer;
       font-size: 1rem;
       font-weight: 500;
-      transition: background 0.2s;
+      font-family: 'Courier New', monospace;
+      transition: all 0.2s;
     }
 
     .run-button:hover {
-      background: #1177bb;
+      background: #fff;
+      color: #000;
+      text-shadow: none;
     }
 
     .run-button:active {
-      background: #0a4d73;
+      background: #000;
+      color: #fff;
     }
 
     .container {
       display: flex;
       flex: 1;
       overflow: hidden;
+      gap: 1rem;
     }
 
     .pane {
       flex: 1;
       display: flex;
       flex-direction: column;
-      border-right: 1px solid #3e3e42;
-    }
-
-    .pane:last-child {
-      border-right: none;
+      border: 2px solid #fff;
+      background: #000;
     }
 
     .pane-header {
-      background: #252526;
+      background: #000;
       padding: 0.75rem 1rem;
-      border-bottom: 1px solid #3e3e42;
+      border-bottom: 2px solid #fff;
       font-weight: 500;
-      color: #cccccc;
+      color: #fff;
       font-size: 0.9rem;
+      font-family: "2Dumb";
     }
 
     .editor-container {
@@ -92,11 +120,11 @@
       flex: 1;
       width: 100%;
       padding: 1rem;
-      background: #1e1e1e;
-      color: #d4d4d4;
+      background: #000;
+      color: #fff;
       border: none;
       resize: none;
-      font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+      font-family: 'Courier New', monospace;
       font-size: 14px;
       line-height: 1.5;
       tab-size: 2;
@@ -104,34 +132,34 @@
     }
 
     #editor:focus {
-      background: #1e1e1e;
+      background: #000;
     }
 
     .js-container {
       flex: 1;
       overflow: auto;
       padding: 1rem;
-      background: #1e1e1e;
+      background: #000;
     }
 
     #javascript {
-      font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+      font-family: 'Courier New', monospace;
       font-size: 14px;
       line-height: 1.5;
       white-space: pre-wrap;
       word-wrap: break-word;
-      color: #d4d4d4;
+      color: #fff;
     }
 
     .output-container {
       flex: 1;
       overflow: auto;
       padding: 1rem;
-      background: #1e1e1e;
+      background: #000;
     }
 
     #output {
-      font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+      font-family: 'Courier New', monospace;
       font-size: 14px;
       line-height: 1.5;
       white-space: pre-wrap;
@@ -139,35 +167,45 @@
     }
 
     .error {
-      color: #f48771;
+      color: #f00;
+      text-shadow: 2px 0 0 rgba(255, 0, 0, 0.5);
     }
 
     .success {
-      color: #4ec9b0;
+      color: #0ff;
+      text-shadow: -2px 0 0 rgba(0, 255, 255, 0.5);
     }
 
     .log-output {
-      color: #dcdcaa;
+      color: #fff;
       margin-bottom: 0.5rem;
     }
 
     .result-output {
-      color: #4ec9b0;
+      color: #fff;
       margin-top: 1rem;
       padding-top: 1rem;
-      border-top: 1px solid #3e3e42;
+      border-top: 2px solid #fff;
       font-weight: 500;
+      font-family: "2Dumb";
     }
 
     .example-link {
-      color: #4ec9b0;
+      color: #fff;
       text-decoration: none;
       font-size: 0.9rem;
       margin-left: 1rem;
+      font-family: 'Courier New', monospace;
+      border-bottom: 1px solid #fff;
     }
 
     .example-link:hover {
-      text-decoration: underline;
+      text-shadow: 2px 0 0 rgba(255, 0, 0, 0.5), -2px 0 0 rgba(0, 255, 255, 0.5);
+    }
+
+    dt-footer {
+      position: relative;
+      z-index: 10;
     }
   </style>
   <script>
@@ -178,6 +216,7 @@ class YAPLTranspiler {
   constructor() {
     this.functions = {};
     this.globals = {};
+    this.params = {};
   }
 
   // Main entry point
@@ -243,6 +282,12 @@ class YAPLTranspiler {
     
     this.functions[name] = true;
 
+    // Track parameters so they're treated as identifiers in the function body
+    const oldParams = { ...this.params };
+    params.forEach(param => {
+      this.params[param] = true;
+    });
+
     // Handle body - could be single expression or list
     let bodyCode;
     if (Array.isArray(body)) {
@@ -260,6 +305,9 @@ class YAPLTranspiler {
       bodyCode = `return ${this.transpileExpr(body)};`;
     }
 
+    // Restore previous params state
+    this.params = oldParams;
+
     return `function ${name}(${params.join(', ')}) {\n  ${bodyCode}\n}`;
   }
 
@@ -270,16 +318,17 @@ class YAPLTranspiler {
     }
 
     const results = entry.map(expr => this.transpileExpr(expr));
-    return `(() => {\n  ${results.map(r => `const _ = ${r};`).join('\n  ')}\n  return _;\n})();`;
+    if (results.length === 0) {
+      return `(() => { return null; })();`;
+    }
+    const statements = results.map((r, i) => 
+      i === 0 ? `let _ = ${r};` : `_ = ${r};`
+    );
+    return `(() => {\n  ${statements.join('\n  ')}\n  return _;\n})();`;
   }
 
   // Transpile expression to JavaScript
   transpileExpr(expr) {
-    // Handle primitives
-    if (this.isPrimitive(expr)) {
-      return JSON.stringify(expr);
-    }
-
     // Handle null/undefined
     if (expr === null || expr === undefined) {
       return 'null';
@@ -295,9 +344,21 @@ class YAPLTranspiler {
       return this.transpileObjectExpr(expr);
     }
 
-    // Handle variable/function reference (string)
+    // Handle variable/function reference (string) - check BEFORE primitives
+    // because identifiers are also strings, but shouldn't be JSON.stringify'd
     if (typeof expr === 'string') {
-      return this.transpileIdentifier(expr);
+      // Treat as identifier if it's registered as a function, global, or parameter
+      // This prevents string literals like "YAPL" from being treated as identifiers
+      if (this.functions[expr] || this.globals[expr] || this.params[expr]) {
+        return this.transpileIdentifier(expr);
+      }
+      // Otherwise treat as string literal
+      return JSON.stringify(expr);
+    }
+
+    // Handle primitives (numbers, booleans)
+    if (this.isPrimitive(expr)) {
+      return JSON.stringify(expr);
     }
 
     throw new Error(`Cannot transpile: ${JSON.stringify(expr)}`);
@@ -509,36 +570,41 @@ window.YAPLTranspiler = YAPLTranspiler;
 </script>
 </head>
 <body>
-  <div class="header">
-    <h1>YAPL - Yet Another Programming Language</h1>
-    <div>
-      <a href="#" class="example-link" id="load-example">Load Example</a>
-      <button class="run-button" onclick="runYAPL()">Run</button>
-    </div>
-  </div>
-  
-  <div class="container">
-    <div class="pane">
-      <div class="pane-header">Editor</div>
-      <div class="editor-container">
-        <textarea id="editor" spellcheck="false"></textarea>
+  <dt-header></dt-header>
+  <main>
+    <div class="header">
+      <h1>YAPL - Yet Another Programming Language</h1>
+      <div>
+        <a href="#" class="example-link" id="load-example">Load Example</a>
+        <button class="run-button" onclick="runYAPL()">Run</button>
       </div>
     </div>
     
-    <div class="pane">
-      <div class="pane-header">JavaScript</div>
-      <div class="js-container">
-        <div id="javascript">Transpiled JavaScript will appear here after running.</div>
+    <div class="container">
+      <div class="pane">
+        <div class="pane-header">Editor</div>
+        <div class="editor-container">
+          <textarea id="editor" spellcheck="false"></textarea>
+        </div>
+      </div>
+      
+      <div class="pane">
+        <div class="pane-header">JavaScript</div>
+        <div class="js-container">
+          <div id="javascript">Transpiled JavaScript will appear here after running.</div>
+        </div>
+      </div>
+      
+      <div class="pane">
+        <div class="pane-header">Output</div>
+        <div class="output-container">
+          <div id="output">Ready to run YAPL code. Click "Run" to execute.</div>
+        </div>
       </div>
     </div>
-    
-    <div class="pane">
-      <div class="pane-header">Output</div>
-      <div class="output-container">
-        <div id="output">Ready to run YAPL code. Click "Run" to execute.</div>
-      </div>
-    </div>
-  </div>
+  </main>
+  <dt-footer><h-card></h-card><span>CC BY-NC-SA</span></dt-footer>
+  <dt-background></dt-background>
 
   <script>
     // Default example code (loaded from example.yapl at build time)
@@ -725,4 +791,3 @@ entry:
   </script>
 </body>
 </html>
-
